@@ -1,11 +1,12 @@
 ﻿@page
+@using WebApp.Helpers
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
 
-
+<h1 class="h1 mt-3 mb-3 display-5 text-center">Welcome @User.GetName()</h1>
 
     <h1 class="h2 mt-3">Dashboard</h1>
 

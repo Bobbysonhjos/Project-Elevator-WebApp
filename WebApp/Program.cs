@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(options =>
     {
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.Authority = "https://project-elevator-idp.azurewebsites.net/";
-        options.ClientId = "adminwebappclient";
+        options.ClientId = "localadminwebappclient";
         options.ClientSecret = "secret"; // TODO Change
         options.ResponseType = "code";
         options.SaveTokens = true;
