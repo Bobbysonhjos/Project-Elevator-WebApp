@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebApp.Pages.Account
 {
+    [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        [Authorize]
         public async Task OnGet()
         {
             await HttpContext.SignOutAsync(
@@ -17,6 +17,5 @@ namespace WebApp.Pages.Account
             await HttpContext.SignOutAsync(
                 OpenIdConnectDefaults.AuthenticationScheme);
         }
-
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using WebApp.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        options.AccessDeniedPath = "/Authentication/AccessDenied";
+        options.AccessDeniedPath = "/Account/AccessDenied";
     })
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
@@ -45,6 +46,13 @@ builder.Services.AddAuthentication(options =>
             RoleClaimType = "role",
         };
     });
+builder.Services.AddAuthorization(opt =>
+{
+    opt.DefaultPolicy = AuthorizationPolicies.GetStandardAccessAuthorizationPolicy();
+    opt.AddPolicy(AuthorizationPolicies.AdminAccess, AuthorizationPolicies.GetAdminAccessAuthorizationPolicy());
+});
+
+
 
 var app = builder.Build();
 
