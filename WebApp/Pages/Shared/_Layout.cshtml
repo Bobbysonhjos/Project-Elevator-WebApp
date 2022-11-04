@@ -11,38 +11,41 @@
     <script src="https://kit.fontawesome.com/30fc700348.js" crossorigin="anonymous"></script>
 </head>
 <body>
- 
 
 
 
 
-<div class="sidebar">
-    <header>Admin Elevator</header>
-    <ul>
-        <li><a href="#"><i class="fas fa-home"></i>DashBoard</a></li>
-        <li><a href="#"><i class="fa-solid fa-elevator"></i>Elevators</a></li>
-        <li><a href="#"><i class="fa-sharp fa-solid fa-screwdriver-wrench"></i>Errands</a></li>
-        <li><a href="#"><i class="fa-solid fa-toolbox"></i>Technicians</a></li>
-        <li><a href="#"><i class="fa-solid fa-lock"></i>Admin</a></li>
-        <li><a href="#"><i class="fa-sharp fa-solid fa-key"> </i>SL Technicians</a></li>
-        <li><a href="#"><i class="fa-solid fa-keyboard"> </i>Sign out</a></li>
-    </ul>
-</div>
+
+    <div class="sidebar">
+        <header>Admin Elevator</header>
+        <ul>
+            <li><a href="#"><i class="fas fa-home"></i>DashBoard</a></li>
+            <li><a href="#"><i class="fa-solid fa-elevator"></i>Elevators</a></li>
+            <li><a href="#"><i class="fa-sharp fa-solid fa-screwdriver-wrench"></i>Errands</a></li>
+            <li><a href="#"><i class="fa-solid fa-toolbox"></i>Technicians</a></li>
+            <li><a href="#"><i class="fa-solid fa-lock"></i>Admin</a></li>
+            <li><a href="#"><i class="fa-sharp fa-solid fa-key"> </i>SL Technicians</a></li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li><a asp-page="/Account/Logout"><i class="fa-solid fa-keyboard"></i>Logout</a></li>
+            }
+        </ul>
+    </div>
 
 
 
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
 
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
-@await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
