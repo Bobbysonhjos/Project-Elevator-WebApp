@@ -6,7 +6,7 @@ namespace WebApp.Pages.Elevator
 {
     public class IndexModel : PageModel
     {
-        [BindProperty] public ElevatorModel Elevator { get; set; } = null!;
+        [BindProperty] public Models.Elevator Elevator { get; set; } = null!;
         public void OnGet()
         {
             
