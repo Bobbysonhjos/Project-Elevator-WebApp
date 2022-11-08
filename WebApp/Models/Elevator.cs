@@ -7,7 +7,7 @@
         public string Status { get; set; } = null!;
      
 
-        public List<Elevator> Elevators { get; set; } = new List<Elevator>();
+       
 
     }
   

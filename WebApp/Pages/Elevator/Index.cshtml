@@ -52,7 +52,7 @@
             </tr>
         }
         
-       @* <tr>
+        <tr>
             <td>
                 @if (Model.PageNo > 1)
                 {
@@ -60,7 +60,7 @@
                 }
             </td>
             <td>
-                Visar sidan @Model.PageNo av totalt @Model.TotalPageCount
+                 Page @Model.PageNo of total @Model.TotalPageCount
             </td>
             <td>
                 @if (Model.PageNo < Model.TotalPageCount)
@@ -68,7 +68,7 @@
                     <a asp-page="/Elevators/Index" asp-route-col="@Model.SortCol" asp-route-order="@Model.SortOrder" asp-route-searchWord="@Model.SearchWord" asp-route-pageno="@(Model.PageNo + 1)">Next</a>
                 }
             </td>
-        </tr>*@
+        </tr>
         </tbody>
     </table>
 </div>
