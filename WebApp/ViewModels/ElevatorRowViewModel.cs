@@ -1,15 +1,10 @@
-﻿namespace WebApp.Models
+﻿namespace WebApp.ViewModels
 {
-    public class Elevator
+    public class ElevatorRowViewModel
     {
         public Guid Id { get; set; }
         public string Location { get; set; } = null!;
         public string Status { get; set; } = null!;
-     
-
-        public List<Elevator> Elevators { get; set; } = new List<Elevator>();
 
     }
-  
-
 }

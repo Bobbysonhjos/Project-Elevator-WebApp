@@ -39,27 +39,39 @@
         </tr>
         </thead>
         <tbody>
-         @foreach (var elevator in Model.Elevator)
-         {
-             <tr>
+
+        @foreach (var elevator in Model.Elevators)
+        {
+            <tr>
                 <td>@elevator.Id</td>
                 <td>@elevator.Location</td>
                 <td>@elevator.Status</td>
-                <td>@elevator.Ongoing</td>
-                 <td>@elevator.Completed</td>
+                
 
-                    <td><a class="btn btn-primary bg-success" asp-page="./Details" asp-route-Id="@elevator.Id">View Details</a></td>
-             </tr>
-         }
-
+                <td><a class="btn btn-primary bg-success" asp-page="./Details" asp-route-Id="@elevator.Id">View Details</a></td>
+            </tr>
+        }
+        
+       @* <tr>
+            <td>
+                @if (Model.PageNo > 1)
+                {
+                    <a asp-page="/Elevators/Index" asp-route-col="@Model.SortCol" asp-route-order="@Model.SortOrder" asp-route-searchWord="@Model.SearchWord" asp-route-pageno="@(Model.PageNo -   1)">Prev</a>
+                }
+            </td>
+            <td>
+                Visar sidan @Model.PageNo av totalt @Model.TotalPageCount
+            </td>
+            <td>
+                @if (Model.PageNo < Model.TotalPageCount)
+                {
+                    <a asp-page="/Elevators/Index" asp-route-col="@Model.SortCol" asp-route-order="@Model.SortOrder" asp-route-searchWord="@Model.SearchWord" asp-route-pageno="@(Model.PageNo + 1)">Next</a>
+                }
+            </td>
+        </tr>*@
         </tbody>
     </table>
 </div>
-
-
-
-
-
 
 
 
