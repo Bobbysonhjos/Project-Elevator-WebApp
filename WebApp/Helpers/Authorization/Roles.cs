@@ -1,4 +1,4 @@
-﻿namespace WebApp.Helpers
+﻿namespace WebApp.Helpers.Authorization
 {
     public static class Roles
     {

@@ -1,18 +1,35 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
+using System.Reflection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using WebApp.Helpers;
+using WebApp.Helpers.Authorization;
+using WebApp.Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
 // Add services to the container.
+builder.Services.AddAccessTokenManagement();
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-builder.Services.AddAccessTokenManagement();
+builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IElevatorRepository, ApiElevatorRepository>();
+builder.Services.AddScoped<IErrandRepository, ApiErrandRepository>();
+
+builder.Services.AddHttpClient("APIClient", options =>
+{
+    options.BaseAddress = new Uri("https://project-elevator-api.azurewebsites.net/api/");
+    options.DefaultRequestHeaders.Accept.Clear();
+    options.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+}).AddUserAccessTokenHandler();
+
 
 builder.Services.AddAuthentication(options =>
     {

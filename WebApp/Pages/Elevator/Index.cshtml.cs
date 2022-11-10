@@ -1,42 +1,59 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using WebApp.Models;
+using WebApp.Helpers;
+using WebApp.Services.Repository;
 
 namespace WebApp.Pages.Elevator
 {
     public class IndexModel : PageModel
     {
-        public List<ElevatorViewModel> Elevators { get; private set; }
+        private readonly IRepository _repository;
+        private readonly IMapper _mapper;
 
+        public List<ElevatorViewModel> Elevators { get; private set; }
+        public PaginationMetadata? PaginationMetadata { get; private set; }
 
         public string SortOrder { get; set; } = null!;
         public string SortCol { get; set; } = null!;
-        public int PageNo { get; set; } 
 
-        public int TotalPageCount { get; set; }
+        public string Search { get; set; } = null!;
+        public string Status { get; set; } = null!;
+        public int PageSize { get; set; }
 
-        public string SearchWord { get; set; } = null!;
 
 
         public class ElevatorViewModel
         {
-            public Guid Id { get; set; }
+            public string Id { get; set; } = null!;
             public string Location { get; set; } = null!;
-            public string Status { get; set; } = null!;
+            public string ElevatorStatus { get; set; } = null!;
         }
 
-
-
-        public void OnGet(string searchWord, string col = "Location", string order = "asc", int pageno = 1)
+        public IndexModel(IRepository repository, IMapper mapper)
         {
-            PageNo = pageno;
-            SearchWord = searchWord;
-            SortCol = col;
-            SortOrder = order;
-            
-
+            _repository = repository;
+            _mapper = mapper;
             Elevators = new List<ElevatorViewModel>();
         }
+
+        public async Task OnGetAsync(string search, string order = "asc", int currentPage = 1, int pageSize = 10, string status = "")
+        {
+            Status = status;
+            Search = search;
+            PageSize = pageSize < 1 ? 10 : pageSize > 20 ? 20 : pageSize;
+
+            var (elevators, paginationMetadata, isSuccess) = 
+                await _repository.Elevators.GetAllAsync( search: Search, filterOnStatus: Status, pageNumber: currentPage, pageSize: PageSize);
+
+            if (!isSuccess)
+                return;
+            // TODO add error message
+
+            Elevators = _mapper.Map<List<ElevatorViewModel>>(elevators);
+            PaginationMetadata = paginationMetadata;
+        }
+
 
         public IActionResult OnPost()
         {

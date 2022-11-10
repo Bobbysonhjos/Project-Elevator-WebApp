@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 
-namespace WebApp.Helpers
+namespace WebApp.Helpers.Authorization
 {
     public static class ClaimsPrincipalExtensions
     {
@@ -18,8 +13,8 @@ namespace WebApp.Helpers
 
             try
             {
-                 first = user.Claims.FirstOrDefault(x => x.Type == "given_name")?.Value;
-                 last = user.Claims.FirstOrDefault(x => x.Type == "family_name")?.Value;
+                first = user.Claims.FirstOrDefault(x => x.Type == "given_name")?.Value;
+                last = user.Claims.FirstOrDefault(x => x.Type == "family_name")?.Value;
             }
             catch
             {
