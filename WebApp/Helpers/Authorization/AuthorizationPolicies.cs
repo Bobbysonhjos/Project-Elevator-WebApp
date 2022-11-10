@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
-namespace WebApp.Helpers
+namespace WebApp.Helpers.Authorization
 {
     public class AuthorizationPolicies
     {
@@ -14,7 +9,7 @@ namespace WebApp.Helpers
         {
             return new AuthorizationPolicyBuilder().RequireAuthenticatedUser().RequireRole(Roles.Admin, Roles.SecondlineTechnician).Build();
         }
-      
+
         public static readonly string AdminAccess = "adminAccess";
         public static AuthorizationPolicy GetAdminAccessAuthorizationPolicy()
         {

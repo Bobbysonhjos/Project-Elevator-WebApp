@@ -9,7 +9,6 @@
 
 
 
-
 <h1 class="h1">Elevators</h1>
 
 
@@ -32,8 +31,8 @@
         <thead>
         <tr>
             <th scope="col">Id</th>
-            <th scope="col">Status</th>
             <th scope="col">Location</th>
+            <th scope="col">Status</th>
         </tr>
            
             
@@ -45,27 +44,27 @@
             <tr>
                 <td>@elevator.Id</td>
                 <td>@elevator.Location</td>
-                <td>@elevator.Status</td>
+                <td>@elevator.ElevatorStatus</td>
                 
 
-                <td><a class="btn btn-primary bg-success" asp-page="./Details" asp-route-Id="@elevator.Id">View Details</a></td>
+                <td><a class="btn btn-primary bg-success" asp-page="./Details" asp-route-elevatorId="@elevator.Id">View Details</a></td>
             </tr>
         }
         
         <tr>
             <td>
-                @if (Model.PageNo > 1)
+                @if (Model.PaginationMetadata!.HasPrevious)
                 {
-                    <a asp-page="/Elevators/Index" asp-route-col="@Model.SortCol" asp-route-order="@Model.SortOrder" asp-route-searchWord="@Model.SearchWord" asp-route-pageno="@(Model.PageNo -   1)">Prev</a>
+                    <a asp-page="/Elevator/Index" asp-route-col="@Model.SortCol" asp-route-order="@Model.SortOrder" asp-route-status="@Model.Status" asp-route-search="@Model.Search" asp-route-pageSize="@Model.PageSize" asp-route-currentPage="@(Model.PaginationMetadata.CurrentPage - 1)">Prev</a>
                 }
             </td>
             <td>
-                 Page @Model.PageNo of total @Model.TotalPageCount
+                    Page @Model.PaginationMetadata.CurrentPage of total @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
             </td>
             <td>
-                @if (Model.PageNo < Model.TotalPageCount)
+                @if (Model.PaginationMetadata.HasNext)
                 {
-                    <a asp-page="/Elevators/Index" asp-route-col="@Model.SortCol" asp-route-order="@Model.SortOrder" asp-route-searchWord="@Model.SearchWord" asp-route-pageno="@(Model.PageNo + 1)">Next</a>
+                    <a asp-page="/Elevator/Index" asp-route-col="@Model.SortCol" asp-route-order="@Model.SortOrder" asp-route-status="@Model.Status"  asp-route-search="@Model.Search" asp-route-pageSize="@Model.PageSize" asp-route-currentPage="@(Model.PaginationMetadata.CurrentPage + 1)">Next</a>
                 }
             </td>
         </tr>

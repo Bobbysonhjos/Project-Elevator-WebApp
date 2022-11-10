@@ -1,32 +1,24 @@
 ﻿using WebApp.Models;
-using Moq;
-
 
 namespace WebApp.Services
 {
     public interface IElevatorService
     {
-        public Task<IEnumerable<Elevator>> GetAllElevator();
-        public Task<Elevator> GetElevatorById(Guid id);
+        public Task<IEnumerable<ElevatorDto>> GetAllElevator();
+        public Task<ElevatorDto> GetElevatorById(Guid id);
     }
 
-    public class MockElevatorService : IElevatorService
+    public class ApiElevatorService : IElevatorService
     {
-        public Task<IEnumerable<Elevator>> GetAllElevator()
+        public Task<IEnumerable<ElevatorDto>> GetAllElevator()
         {
-            return Task.FromResult<IEnumerable<Elevator>>(new List<Elevator>());
+            return Task.FromResult<IEnumerable<ElevatorDto>>(new List<ElevatorDto>());
         }
 
-        public Task<Elevator> GetElevatorById(Guid id)
+        public Task<ElevatorDto> GetElevatorById(Guid id)
         {
-            return Task.FromResult(new Elevator());
+            return Task.FromResult(new ElevatorDto());
 
-        }
-        
-            
-
-       
+        } 
     }
-
-
 }
