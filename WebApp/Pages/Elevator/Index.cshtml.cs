@@ -42,7 +42,7 @@ public class IndexModel : PageModel
 
 
     public string? Order { get; private set; }
-    public string? Column { get; private set; } = "Id";
+    public string? Column { get; private set; }
     public string? SearchQuery { get; private set; }
     public string? Filter { get; private set; }
     public string? OrderBy { get; private set; }
@@ -58,8 +58,8 @@ public class IndexModel : PageModel
         Filter = filter?.Trim().ToLower() == "none" ? null : filter;
         SearchQuery = !string.IsNullOrEmpty(searchQuery) ? searchQuery : null;
         PageSize = pageSize < 1 ? 10 : pageSize > 20 ? 20 : pageSize;
-        Order = order;
-        Column = column;
+        Order = order ?? "asc";
+        Column = column ?? "id";
         OrderBy = column is not null ? $"{column},{order}" : null;
 
         var (elevators, paginationMetadata, isSuccess) =
@@ -75,19 +75,19 @@ public class IndexModel : PageModel
         PaginationMetadata = paginationMetadata;
     }
 
-    public string SetSortIcon(string column)
+    public string SetSortIcon(string col)
     {
-        return Column?.Trim().ToLower() != column.Trim().ToLower() ? "" : Order?.Trim().ToLower() == "desc" ? "fa-sort-up" : "fa-sort-down";
+        return !string.Equals(Column?.Trim(), col.Trim(), StringComparison.CurrentCultureIgnoreCase) ? "" : Order?.Trim().ToLower() == "desc" ? "fa-sort-up" : "fa-sort-down";
     }
-    public string? SetOrder(string? column)
+    public string? SetOrder(string? col)
     {
-        if (column is null)
+        if (col is null)
             return null;
 
-        if (Column?.Trim().ToLower() == column?.Trim().ToLower())
+
+        if (string.Equals(Column?.Trim(), col.Trim(), StringComparison.CurrentCultureIgnoreCase))
             return Order == "asc" ? "desc" : "asc";
 
-
-        return null;
+        return "asc";
     }
 }
