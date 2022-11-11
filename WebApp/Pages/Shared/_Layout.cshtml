@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - Project - ElevatorDto</title>
+    <title>@ViewData["Title"] - Project - Elevator</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <script src="https://kit.fontawesome.com/30fc700348.js" crossorigin="anonymous"></script>
@@ -19,11 +19,11 @@
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
     @if ((await AuthorizationService.AuthorizeAsync(User, AuthorizationPolicies.AdminAccess)).Succeeded)
     {
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" asp-page="/Index">ElevatorDto Admin</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" asp-page="/Index">Elevator Admin</a>
     }
     else
     {
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" asp-page="/Index">ElevatorDto Secondline</a> 
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" asp-page="/Index">Elevator Secondline</a> 
     }
 
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">

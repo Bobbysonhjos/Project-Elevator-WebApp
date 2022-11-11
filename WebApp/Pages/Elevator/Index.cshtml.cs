@@ -1,68 +1,93 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.Helpers;
 using WebApp.Services.Repository;
 
-namespace WebApp.Pages.Elevator
+namespace WebApp.Pages.Elevator;
+
+[BindProperties]
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    private readonly IMapper _mapper;
+    private readonly IRepository _repository;
+
+    public IndexModel(IRepository repository, IMapper mapper)
     {
-        private readonly IRepository _repository;
-        private readonly IMapper _mapper;
-
-        public List<ElevatorViewModel> Elevators { get; private set; }
-        public PaginationMetadata? PaginationMetadata { get; private set; }
-
-        public string SortOrder { get; set; } = null!;
-        public string SortCol { get; set; } = null!;
-
-        public string Search { get; set; } = null!;
-        public string Status { get; set; } = null!;
-        public int PageSize { get; set; }
-
-
-
-        public class ElevatorViewModel
+        _repository = repository;
+        _mapper = mapper;
+        Elevators = new List<ElevatorViewModel>();
+        Filters = new SelectListItem[]
         {
-            public string Id { get; set; } = null!;
-            public string Location { get; set; } = null!;
-            public string ElevatorStatus { get; set; } = null!;
-        }
+            new() { Text = "None", Value = null }, new() { Text = "Enabled", Value = "enabled" },
+            new() { Text = "Disabled", Value = "disabled" }, new() { Text = "Error", Value = "error" }
+        };
+        PaginationMetadata = new PaginationMetadata();
+    }
 
-        public IndexModel(IRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-            Elevators = new List<ElevatorViewModel>();
-        }
+    public class ElevatorViewModel
+    {
+        public string Id { get; set; } = null!;
+        public string Location { get; set; } = null!;
+        public string ElevatorStatus { get; set; } = null!;
+        public DateTime CreatedDateUtc { get; set; }
+    }
 
-        public async Task OnGetAsync(string search, string order = "asc", int currentPage = 1, int pageSize = 10, string status = "")
-        {
-            Status = status;
-            Search = search;
-            PageSize = pageSize < 1 ? 10 : pageSize > 20 ? 20 : pageSize;
+    public List<ElevatorViewModel> Elevators { get; private set; }
 
-            var (elevators, paginationMetadata, isSuccess) = 
-                await _repository.Elevators.GetAllAsync( search: Search, filterOnStatus: Status, pageNumber: currentPage, pageSize: PageSize);
+    public PaginationMetadata PaginationMetadata { get; private set; }
 
-            if (!isSuccess)
-                return;
-            // TODO add error message
-
-            Elevators = _mapper.Map<List<ElevatorViewModel>>(elevators);
-            PaginationMetadata = paginationMetadata;
-        }
+    public SelectListItem[] Filters { get; private set; }
 
 
-        public IActionResult OnPost()
-        {
-            if (ModelState.IsValid == false)
-            {
-                return Page();
-            }
+    public string? Order { get; private set; }
+    public string? Column { get; private set; } = "Id";
+    public string? SearchQuery { get; private set; }
+    public string? Filter { get; private set; }
+    public string? OrderBy { get; private set; }
+    public int PageSize { get; private set; }
 
-            return RedirectToPage("./Index");
-        }
+    public async Task OnGetAsync(string? filter, string? column, string? order, string? searchQuery,
+        int currentPage = 1, int pageSize = 10)
+    {
+
+        if (SearchQuery != searchQuery)
+            currentPage = 1;
+
+        Filter = filter?.Trim().ToLower() == "none" ? null : filter;
+        SearchQuery = !string.IsNullOrEmpty(searchQuery) ? searchQuery : null;
+        PageSize = pageSize < 1 ? 10 : pageSize > 20 ? 20 : pageSize;
+        Order = order;
+        Column = column;
+        OrderBy = column is not null ? $"{column},{order}" : null;
+
+        var (elevators, paginationMetadata, isSuccess) =
+            await _repository.Elevators.GetAllAsync(searchQuery: SearchQuery, filter: Filter, currentPage: currentPage,
+                pageSize: PageSize, orderBy: OrderBy);
+
+
+        if (!isSuccess)
+            return;
+        // TODO add error message
+
+        Elevators = _mapper.Map<List<ElevatorViewModel>>(elevators);
+        PaginationMetadata = paginationMetadata;
+    }
+
+    public string SetSortIcon(string column)
+    {
+        return Column?.Trim().ToLower() != column.Trim().ToLower() ? "" : Order?.Trim().ToLower() == "desc" ? "fa-sort-up" : "fa-sort-down";
+    }
+    public string? SetOrder(string? column)
+    {
+        if (column is null)
+            return null;
+
+        if (Column?.Trim().ToLower() == column?.Trim().ToLower())
+            return Order == "asc" ? "desc" : "asc";
+
+
+        return null;
     }
 }

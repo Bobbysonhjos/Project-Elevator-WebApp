@@ -10,8 +10,8 @@ namespace WebApp.Helpers.AutoMapper
         {
             // Elevator Folder Viewmodel mappings
             CreateMap<ElevatorDto, IndexModel.ElevatorViewModel>();
-            CreateMap<ElevatorDto, DetailsModel.ElevatorViewModel>();
             CreateMap<ErrandDto, DetailsModel.ErrandViewModel>();
+            CreateMap<ElevatorWithErrandsDto, DetailsModel.ElevatorViewModel>();
         }
     }
 }
