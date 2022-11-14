@@ -1,5 +1,3 @@
-using AutoMapper;
-using IdentityModel.Client;
 using Newtonsoft.Json;
 
 namespace WebApp.Services.Repository;
