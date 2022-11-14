@@ -8,8 +8,9 @@ namespace WebApp.Services.Repository
     public interface IErrandRepository
     {
         public Task<IEnumerable<ErrandDto>> GetAllErrandsForElevatorAsync(string elevatorId);
-        public Task<(IEnumerable<ErrandDto> Errands, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetAllErrandsPaginatedAsync(ErrandsResourceParameters parameters);
-        public Task<ErrandDto> GetErrandByIdForElevatorAsync();
+        public Task<(IEnumerable<ErrandDto> Errands, PaginationMetadata? PaginationMetadata, bool IsSuccess)> GetAllErrandsPaginatedAsync(ErrandsResourceParameters parameters);
+        public Task<ErrandDto> GetErrandByIdForElevatorAsync(string elevatorId, string errandId);
+        public Task<(ErrandWithCommentsDto? Errand, PaginationMetadata? paginationMetadata, bool IsSuccess)> GetErrandByIdForElevatorAsync(string elevatorId, string errandId, ErrandWithCommentsResourceParameters parameters);
         public Task<ErrandDto> CreateErrandForElevatorAsync();
         public Task<ErrandDto> UpdateErrandForElevatorAsync();
     }
@@ -51,7 +52,7 @@ namespace WebApp.Services.Repository
             return Enumerable.Empty<ErrandDto>();
         }
 
-        public async Task<(IEnumerable<ErrandDto> Errands, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetAllErrandsPaginatedAsync(ErrandsResourceParameters parameters)
+        public async Task<(IEnumerable<ErrandDto> Errands, PaginationMetadata? PaginationMetadata, bool IsSuccess)> GetAllErrandsPaginatedAsync(ErrandsResourceParameters parameters)
         {
             try
             {
@@ -80,12 +81,68 @@ namespace WebApp.Services.Repository
             {
                 // Ignored
             }
-            return (Enumerable.Empty<ErrandDto>(), null, false)!;
+            return (Enumerable.Empty<ErrandDto>(), null, false);
         }
 
-        public Task<ErrandDto> GetErrandByIdForElevatorAsync()
+        public async Task<ErrandDto> GetErrandByIdForElevatorAsync(string elevatorId, string errandId)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(elevatorId) || string.IsNullOrEmpty(errandId))
+                return null!;
+            try
+            {
+                using var client = _httpClientFactory.CreateClient("APIClient");
+
+                var httpRequestUri = $"elevator/{elevatorId}/errands/{errandId}";
+
+
+                var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
+
+                var response = await client.SendAsync(httpRequest);
+
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception();
+
+                var data = JsonConvert.DeserializeObject<ErrandDto>(await response.Content.ReadAsStringAsync());
+
+                return (data);
+            }
+            catch
+            {
+                // Ignored
+            }
+            return null!;
+        }
+
+        public async Task<(ErrandWithCommentsDto? Errand, PaginationMetadata? paginationMetadata, bool IsSuccess)> GetErrandByIdForElevatorAsync(string elevatorId, string errandId, ErrandWithCommentsResourceParameters parameters)
+        {
+            if (string.IsNullOrEmpty(elevatorId) || string.IsNullOrEmpty(errandId))
+                return (null,null,false);
+            try
+            {
+                using var client = _httpClientFactory.CreateClient("APIClient");
+
+                var httpRequestUri = $"elevators/{elevatorId}/errands/{errandId}?includeComments=true";
+                if (parameters.PageSize != 10)
+                    httpRequestUri += $"&pageSize={parameters.PageSize}";
+                if (parameters.CurrentPage > 1)
+                    httpRequestUri += $"&currentPage={parameters.CurrentPage}";
+
+                var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
+
+                var response = await client.SendAsync(httpRequest);
+
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception();
+
+                var data = JsonConvert.DeserializeObject<HttpSingleResponse<ErrandWithCommentsDto>>(await response.Content.ReadAsStringAsync());
+
+                return (data.Data, data.PaginationMetadata, true);
+            }
+            catch
+            {
+                // Ignored
+            }
+            return (null,null,false);
         }
 
         public Task<ErrandDto> CreateErrandForElevatorAsync()

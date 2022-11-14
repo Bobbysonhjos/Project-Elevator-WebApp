@@ -14,6 +14,8 @@ namespace WebApp.Pages.Elevator
         {
             _repository = repository;
             _mapper = mapper;
+            PaginationMetadata = new PaginationMetadata();
+            Elevator = new ElevatorViewModel();
         }
 
         public PaginationMetadata PaginationMetadata { get; private set; }
@@ -33,6 +35,7 @@ namespace WebApp.Pages.Elevator
             public string ElevatorStatus { get; set; } = null!;
             public string Location { get; set; } = null!;
             public DateTime CreatedDateUtc { get; set; }
+
             public IList<ErrandViewModel> Errands { get; set; } = new List<ErrandViewModel>();
         }
 

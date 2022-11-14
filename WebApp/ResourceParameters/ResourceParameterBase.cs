@@ -5,7 +5,6 @@ public abstract class ResourceParameterBase
     private const int MaxPageSize = 20;
     private int _pageSize = 10;
     private int _currentPage = 1;
-    public string? SearchQuery { get; set; }
     public int CurrentPage
     {
         get => _currentPage;

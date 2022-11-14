@@ -130,3 +130,7 @@ body {
     text-decoration: none !important;
     color: inherit;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}

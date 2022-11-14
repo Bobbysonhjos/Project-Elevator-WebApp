@@ -28,22 +28,18 @@ namespace WebApp.Pages.Errands
         }
 
         public SelectListItem[] Filters { get; set; }
-
         public IReadOnlyList<ErrandViewModel> Errands { get; private set; }
         public PaginationMetadata PaginationMetadata { get; set; }
         public ErrandsResourceParameters Parameters { get; private set; }
         public string? Filter { get; set; }
+        public bool IsSuccess { get; set; }
+
 
         public async Task OnGetAsync([FromQuery] ErrandsResourceParameters parameters)
         {
             Parameters = parameters;
             var (errands, paginationMetadata, isSuccess) = await _repository.Errands.GetAllErrandsPaginatedAsync(parameters);
-
-            if (isSuccess)
-            {
-                
-            }
-
+            IsSuccess = isSuccess;
             Errands = _mapper.Map<IReadOnlyList<ErrandViewModel>>(errands);
             PaginationMetadata = paginationMetadata ?? new PaginationMetadata();
         }
@@ -70,6 +66,7 @@ namespace WebApp.Pages.Errands
             public string Id { get; set; } = null!;
             public string Title { get; set; } = null!;
             public string ErrandStatus { get; set; } = null!;
+            public string ElevatorId { get; set; } = null!;
             public string AssignedToId { get; set; } = null!;
             public string AssignedToName { get; set; } = null!;
             public string CreatedById { get; set; } = null!;
