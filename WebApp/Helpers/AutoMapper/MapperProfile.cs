@@ -12,6 +12,10 @@ namespace WebApp.Helpers.AutoMapper
             CreateMap<ElevatorDto, IndexModel.ElevatorViewModel>();
             CreateMap<ErrandDto, DetailsModel.ErrandViewModel>();
             CreateMap<ElevatorWithErrandsDto, DetailsModel.ElevatorViewModel>();
+
+
+            //Errand folder
+            CreateMap<ErrandDto, Pages.Errands.IndexModel.ErrandViewModel>();
         }
     }
 }

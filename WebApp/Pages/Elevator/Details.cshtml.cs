@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApp.Helpers;
-using WebApp.Models;
 using WebApp.Services.Repository;
 
 namespace WebApp.Pages.Elevator

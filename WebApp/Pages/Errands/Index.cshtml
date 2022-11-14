@@ -1,4 +1,116 @@
 ﻿@page
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model WebApp.Pages.Errands.IndexModel
 @{
+    ViewData["Title"] = "Errands";
 }
+
+<h1 class="display-4 my-3">Errands</h1>
+<div class="border rounded p-4">
+<div class="container">
+    <div class="row">
+        <div class="px-0 my-3 col-md-12 col-lg-8 ">
+            <form method="GET">
+                <div class="form">
+                    <i class="fa fa-search"></i>
+                    @if (Model.Parameters.PageSize != 10)
+                    {
+                        @Html.Hidden("PageSize", Model.Parameters.PageSize)
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Parameters.OrderBy))
+                    {
+                        @Html.Hidden("OrderBy", Model.Parameters.OrderBy)
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Parameters.OrderDirection))
+                    {
+                        @Html.Hidden("OrderDirection",  Model.Parameters.OrderDirection)
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Parameters.Filter))
+                    {
+                        @Html.Hidden("Filter",Model.Parameters.Filter)
+                    }
+                    <input name="SearchQuery" class="form-control form-input" value="@Model.Parameters.SearchQuery" placeholder="Search anything...">
+                </div>
+            </form>
+        </div>
+
+        <div class="col col-12 col-md-4 col-lg-4 pe-0">
+            <form  id="FilterForm" method="GET">
+                <label asp-for="@Model.Parameters.Filter">Filter</label>
+                @if (Model.Parameters.CurrentPage > 1)
+                {
+                    @Html.Hidden("CurrentPage", Model.Parameters.CurrentPage)
+                }
+                @if (Model.Parameters.PageSize != 10)
+                {
+                    @Html.Hidden("PageSize", Model.Parameters.PageSize)
+                }
+                @if (!string.IsNullOrEmpty(Model.Parameters.OrderBy))
+                {
+                    @Html.Hidden("OrderBy", Model.Parameters.OrderBy)
+                }
+                @if (!string.IsNullOrEmpty(Model.Parameters.OrderDirection))
+                {
+                    @Html.Hidden("OrderDirection",  Model.Parameters.OrderDirection)
+                }
+                @if (!string.IsNullOrEmpty(Model.Parameters.SearchQuery))
+                {
+                    @Html.Hidden("SearchQuery",Model.Parameters.SearchQuery)
+                }
+                <select class="form-control form-select-lg" asp-for="@Model.Filter" asp-items="@Model.Filters" onchange="this.form.submit()"></select>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+    <table class="table table-hover table-sm">
+        <thead>
+        <tr>
+            <th scope="col"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="title" asp-route-OrderDirection="@Model.SetOrder("title")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Title</a><span class="fa @(Model.SetSortIcon("title"))"></span></th>
+            <th scope="col"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="errandstatus" asp-route-OrderDirection="@Model.SetOrder("errandstatus")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Status</a><span class="fa @(Model.SetSortIcon("errandstatus"))"></span></th>
+            <th scope="col"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="assignedtoname" asp-route-OrderDirection="@Model.SetOrder("assignedtoname")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Assigned</a><span class="fa @(Model.SetSortIcon("assignedtoname"))"></span></th>
+            <th scope="col"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="createdbyname" asp-route-OrderDrection="@Model.SetOrder("createdbyname")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created By</a><span class="fa @(Model.SetSortIcon("createdbyname"))"></span></th>
+            <th scope="col"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="createddateutc" asp-route-OrderDirection="@Model.SetOrder("createddateutc")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created</a><span class="fa @(Model.SetSortIcon("createddateutc"))"></span></th>
+            <th scope="col">Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model.Errands.Any())
+        {
+            @foreach (var elevator in Model.Errands)
+            {
+                <tr>
+                    <td>@elevator.Title</td>
+                    <td>@elevator.ErrandStatus</td>
+                    <td>@elevator.AssignedToName</td>
+                    <td>@elevator.CreatedByName</td>
+                    <td>@elevator.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
+                    <td><a class="btn btn-primary bg-success" asp-page="./Details" asp-route-elevatorId="@elevator.Id">View Details</a></td>
+                </tr>
+            }
+        }
+
+        </tbody>
+    </table>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col text-center">
+                @if (Model.PaginationMetadata!.HasPrevious)
+                {
+                    <a asp-page="/Errands/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Prev</a>
+                }
+            </div>
+            <div class="col text-center">
+                Page @Model.PaginationMetadata.CurrentPage of total @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
+            </div>
+            <div class="col text-center">
+                @if (Model.PaginationMetadata.HasNext)
+                {
+                    <a asp-page="/Errands/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Next</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
