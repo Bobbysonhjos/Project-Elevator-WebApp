@@ -1,172 +1,156 @@
 ﻿@page "/Elevator/{elevatorId}/Errands/{errandId}"
+@inject IAuthorizationService AuthorizationService;
 @using System.Globalization
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using WebApp.Helpers.Authorization
 @model DetailsModel
 @{
     ViewData["Title"] = "Details";
 }
 
-
-
-
 @if (Model.IsSuccess)
 {
-    <div class="border rounded-3 p-4 mt-4">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-6 pe-0 rounded-start">
-                    <div class="col">
-                        <div class="card mb-4 border-end-0 rounded-0 rounded-start">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Title</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">@Model.Errand.Title</p>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Created By</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">@Model.Errand.CreatedByName</p>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Assigned To</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">@Model.Errand.AssignedToName</p>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Created</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0">@Model.Errand.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</p>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="mb-0">Elevator</p>
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <p class="text-muted mb-0 cursor-pointer" onclick="location.href='@Url.Page("/Elevator/Details", new {Model.Errand.ElevatorId})'">Elevator</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 card ps-0 mb-4 border-start-0 rounded-0 rounded-end">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Description</p>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col">
-                                <textarea class="form-control bg-white" style="resize: none; user-select: none;" readonly asp-for="Errand.Description" rows="7"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="container shadow border rounded my-5 p-4 no-select">
+        <div class="position-relative">
+            <div class="position-absolute top-0 end-0">
+                <a class="me-3 mt-1 no-anchor text-muted" asp-page="/Errands/Edit" asp-route-elevatorId="@Model.Errand.ElevatorId" asp-route-errandId="@Model.Errand.Id">
+                    <i class="fa-regular fa-pen-to-square fa-xl"></i>
+                </a>
             </div>
         </div>
-        @*<div class="border rounded-3 p-4">
-    <h1 class="display-6">Comments</h1>*@
-        <div class="accordion accordion-flush" id="accordionFlushExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="flush-headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                        Message
-                    </button>
-                </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Hay caca del gato en el pared! <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+        <div class="row row-eq-height p-4">
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="fw-bold mb-0">Title</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.Errand.Title</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="fw-bold mb-0">Created By</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.Errand.CreatedByName</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="fw-bold mb-0">Assigned</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.Errand.AssignedToName</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="fw-bold mb-0">Created</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.Errand.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="fw-bold mb-0">Elevator</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0 cursor-pointer" onclick="location.href='@Url.Page("/Elevator/Details", new {Model.Errand.ElevatorId})'">Elevator Details</p>
+                    </div>
                 </div>
             </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="flush-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                        Comment
-                    </button>
-                </h2>
-                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">No voy a limpear eso, olvida <code>.accordion-flush</code> class. Comment</div>
+            <div class="col-lg-6">
+                <div class="col-lg-12">
+                    <p class="fw-bold mb-0">Description</p>
                 </div>
+                <div class="col-lg-12 mt-3">
+                    <textarea class="form-control bg-white rounded-0 rounded-bottom  p-3" style="resize: none; user-select: none;" readonly asp-for="Errand.Description" rows="7"></textarea>
+                </div>
+
             </div>
-
-
+        </div>
+        <div class="row p-3">
+            <h5 class="display-6 mb-2 pb-2">Latest Comments</h5>
+            <hr />
+            <div class="row ms-0">
+                <form asp-page-handler="Comment">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="d-flex flex-row mt-4 mb-4">
+                        <img class="img-fluid img-responsive rounded-circle me-3" src="https://i.imgur.com/qdiP4DB.jpg" width="58">
+                        <input type="text" asp-for="@Model.Comment" class="form-control me-3" placeholder="Add comment">
+                        <button class="btn btn-primary" type="submit">Comment</button>
+                    </div>
+                </form>
+            </div>
             @if (Model.Errand.Comments.Any())
             {
-                <table class="table table-hover table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col" style="width: 20%">From</th>
-                            <th scope="col" style="width: 60%">Message</th>
-                            <th scope="col" style="width: 20%">Posted</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                @foreach (var comment in Model.Errand.Comments)
+                {
+                    <div class="card-body p-4 rounded shadow-sm mb-3">
+                        <div class="d-flex">
+                            <img class="rounded-circle shadow-lg me-3" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(33).webp" alt="avatar" width="60" height="60">
+                            <div>
+                                <h6 class="fw-bold mb-1">@comment.CreatedByName</h6>
+                                <div class="d-flex align-items-center mb-2">
+                                    <p class="mb-0">
+                                        @comment.CreatedDateUtc.ToString("f")
+                                    </p>
+                                    @if ((await AuthorizationService.AuthorizeAsync(User, AuthorizationPolicies.AdminAccess)).Succeeded)
+                                    {
+                                        <a href="#!" class="text-muted">
+                                            <i class="fa-regular fa-trash-can ms-2"></i>
+                                        </a>
+                                    }
+                                </div>
 
-                        @foreach (var comment in Model.Errand.Comments)
-                        {
-                            <tr class="cursor-pointer align-middle" style="height: 50px">
-                                <td>@comment.CreatedByName</td>
-                                <td>@comment.Message</td>
-                                <td>@comment.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                <p class="mb-0">
+                                    @comment.Message
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                }
             }
             else
             {
-                <div class="container-fluid text-center border-top pt-4">
-                    <p class="fs-6">No Comments</p>
+                <div class="container-fluid text-center pt-4">
+                    <p class="fw-thin">No comments yet, be the first to comment ...</p>
                 </div>
             }
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col text-center">
-                        @if (Model.PaginationMetadata!.HasPrevious)
-                        {
-                            <a asp-page="/Errands/Details" asp-route-elevatorId="@Model.Errand.ElevatorId" asp-route-errandId="@Model.Errand.Id" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Prev</a>
-                        }
-                    </div>
-                    <div class="col text-center">
-                        Page @Model.PaginationMetadata.CurrentPage of total @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
-                    </div>
-                    <div class="col text-center">
-                        @if (Model.PaginationMetadata.HasNext)
-                        {
-                            <a asp-page="/Errands/Details" asp-route-elevatorId="@Model.Errand.ElevatorId" asp-route-errandId="@Model.Errand.Id" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Next</a>
-                        }
+            @if (Model.PaginationMetadata.TotalPageCount > 1)
+            {
+                <div class="container-fluid my-2">
+                    <div class="row pt-3">
+                        <div class="col text-center">
+                            @if (Model.PaginationMetadata!.HasPrevious)
+                            {
+                                <a class="pagination-btn" asp-page="/Errands/Details" asp-route-elevatorId="@Model.Errand.ElevatorId" asp-route-errandId="@Model.Errand.Id" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
+                                    <i class="fa-solid fa-angles-left fa-2xl"></i>
+                                </a>
+                            }
+                        </div>
+                        <div class="col text-center">
+                            Page @Model.PaginationMetadata.CurrentPage of @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
+                        </div>
+                        <div class="col text-center">
+                            @if (Model.PaginationMetadata.HasNext)
+                            {
+                                <a class="pagination-btn" asp-page="/Errands/Details" asp-route-elevatorId="@Model.Errand.ElevatorId" asp-route-errandId="@Model.Errand.Id" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
+                                    <i class="fa-solid fa-angles-right fa-2xl"></i>
+                                </a>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-            <form asp-page-handler="Comment">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="d-flex flex-row add-comment-section mt-4 mb-4">
-                    <img class="img-fluid img-responsive rounded-circle me-2" src="https://i.imgur.com/qdiP4DB.jpg" width="38">
-                    <input type="text" asp-for="@Model.Comment" class="form-control me-3" placeholder="Add comment">
-                    <button class="btn btn-primary" type="submit">Comment</button>
-                </div>
-
-            </form>
-
-
+            }
         </div>
     </div>
 }
@@ -178,7 +162,7 @@ else
 }
 
 @section Scripts
-{
+    {
     <partial name="Shared/_ValidationScriptsPartial" />
 
 }
