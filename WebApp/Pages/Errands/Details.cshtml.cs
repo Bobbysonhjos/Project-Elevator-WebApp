@@ -33,21 +33,33 @@ public class DetailsModel : PageModel
     public string? Comment { get; set; }
 
 
-    public async Task OnGetAsync(string elevatorId, string errandId,
+    public async Task<IActionResult> OnGetAsync(string elevatorId, string errandId,
         [FromQuery] ErrandWithCommentsResourceParameters parameters)
     {
-        await LoadData(elevatorId, errandId, parameters);
+        var couldLoad = await LoadData(elevatorId, errandId, parameters);
+        if (!couldLoad)
+            return RedirectToPage();
+
+        return Page();
     }
 
-    private async Task LoadData(string elevatorId, string errandId, ErrandWithCommentsResourceParameters parameters)
+    private async Task<bool> LoadData(string elevatorId, string errandId,
+        ErrandWithCommentsResourceParameters parameters)
     {
         Parameters = parameters;
         var (errand, paginationMetadata, isSuccess) =
             await _repository.Errands.GetErrandByIdForElevatorAsync(elevatorId, errandId, parameters);
+        if (parameters.CurrentPage != 1 && parameters.CurrentPage > paginationMetadata?.TotalPageCount)
+        {
+            parameters.CurrentPage = 1;
+            return false;
+        }
 
         IsSuccess = isSuccess;
         Errand = _mapper.Map<ErrandViewModel>(errand);
         PaginationMetadata = paginationMetadata ?? new PaginationMetadata();
+
+        return true;
     }
 
     public async Task<IActionResult> OnPostComment(string elevatorId, string errandId,

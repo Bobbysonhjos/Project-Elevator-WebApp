@@ -1,6 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap');
+.html {
+    font-family: 'Roboto', sans-serif;
+}
+
 body {
     font-size: .875rem;
 }
+
+
 
 .feather {
     width: 16px;
@@ -133,4 +140,18 @@ body {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.no-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+.no-anchor {
+    text-decoration: none !important;
+    color: inherit;
+}
+.pagination-btn {
+    text-decoration: none !important;
+    color: inherit;
 }
