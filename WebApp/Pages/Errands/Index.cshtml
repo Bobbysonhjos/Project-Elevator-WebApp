@@ -68,52 +68,52 @@
         </div>
 
 
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr>
-                    <th scope="col" style="width: 20%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="title" asp-route-OrderDirection="@Model.SetOrder("title")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Title</a><span class="fa @(Model.SetSortIcon("title"))"></span></th>
-                    <th scope="col" style="width: 10%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="errandstatus" asp-route-OrderDirection="@Model.SetOrder("errandstatus")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Status</a><span class="fa @(Model.SetSortIcon("errandstatus"))"></span></th>
-                    <th scope="col" style="width: 25%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="assignedtoname" asp-route-OrderDirection="@Model.SetOrder("assignedtoname")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Assigned</a><span class="fa @(Model.SetSortIcon("assignedtoname"))"></span></th>
-                    <th scope="col" style="width: 25%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="createdbyname" asp-route-OrderDirection="@Model.SetOrder("createdbyname")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created By</a><span class="fa @(Model.SetSortIcon("createdbyname"))"></span></th>
-                    <th scope="col" style="width: 20%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="createddateutc" asp-route-OrderDirection="@Model.SetOrder("createddateutc")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created</a><span class="fa @(Model.SetSortIcon("createddateutc"))"></span></th>
+    <table class="table table-hover table-sm">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 20%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="title" asp-route-OrderDirection="@Model.SetOrder("title")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Title</a><span class="fa @(Model.SetSortIcon("title"))"></span></th>
+            <th scope="col" style="width: 10%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="errandstatus" asp-route-OrderDirection="@Model.SetOrder("errandstatus")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Status</a><span class="fa @(Model.SetSortIcon("errandstatus"))"></span></th>
+            <th scope="col" style="width: 25%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="assignedtoname" asp-route-OrderDirection="@Model.SetOrder("assignedtoname")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Assigned</a><span class="fa @(Model.SetSortIcon("assignedtoname"))"></span></th>
+            <th scope="col" style="width: 25%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="createdbyname" asp-route-OrderDirection="@Model.SetOrder("createdbyname")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created By</a><span class="fa @(Model.SetSortIcon("createdbyname"))"></span></th>
+            <th scope="col" style="width: 20%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="createddateutc" asp-route-OrderDirection="@Model.SetOrder("createddateutc")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created</a><span class="fa @(Model.SetSortIcon("createddateutc"))"></span></th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model.Errands.Any())
+        {
+            @foreach (var errand in Model.Errands)
+            {
+                <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href='@Url.Page("./Details", new { ErrandId = errand.Id,  errand.ElevatorId })'">
+                    <td>@errand.Title</td>
+                    <td>@errand.ErrandStatus</td>
+                    <td>@errand.AssignedToName</td>
+                    <td>@errand.CreatedByName</td>
+                    <td>@errand.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
                 </tr>
-            </thead>
-            <tbody>
-                @if (Model.Errands.Any())
+            }
+        }
+        </tbody>
+    </table>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col text-center">
+                @if (Model.PaginationMetadata!.HasPrevious)
                 {
-                    @foreach (var errand in Model.Errands)
-                    {
-                        <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href='@Url.Page("./Details", new { ErrandId = errand.Id,  errand.ElevatorId })'">
-                            <td>@errand.Title</td>
-                            <td>@errand.ErrandStatus</td>
-                            <td>@errand.AssignedToName</td>
-                            <td>@errand.CreatedByName</td>
-                            <td>@errand.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
-                        </tr>
-                    }
+                    <a asp-page="/Errands/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Prev</a>
                 }
-            </tbody>
-        </table>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col text-center">
-                    @if (Model.PaginationMetadata!.HasPrevious)
-                    {
-                        <a asp-page="/Errands/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Prev</a>
-                    }
-                </div>
-                <div class="col text-center">
-                    Page @Model.PaginationMetadata.CurrentPage of total @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
-                </div>
-                <div class="col text-center">
-                    @if (Model.PaginationMetadata.HasNext)
-                    {
-                        <a asp-page="/Errands/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Next</a>
-                    }
-                </div>
+            </div>
+            <div class="col text-center">
+                Page @Model.PaginationMetadata.CurrentPage of total @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
+            </div>
+            <div class="col text-center">
+                @if (Model.PaginationMetadata.HasNext)
+                {
+                    <a asp-page="/Errands/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">Next</a>
+                }
             </div>
         </div>
     </div>
+</div>
 }
 else
 {
