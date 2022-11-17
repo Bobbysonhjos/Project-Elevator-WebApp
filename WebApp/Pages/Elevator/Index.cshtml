@@ -9,9 +9,9 @@
 
 <h1 class="display-4 my-4">Elevators</h1>
 
-<div class="border rounded-3 p-4">
+<div class="border rounded-3 p-4 shadow">
     <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
             <div class="px-0 my-3 col-md-12 col-lg-8 ">
                 <form method="GET">
                     <div class="form">
@@ -36,13 +36,13 @@
                         {
                             <input type="hidden" name="pageSize" asp-for="@Model.PageSize" />
                         }
-                        <input asp-for="@Model.SearchQuery" class="form-control form-input" placeholder="Search anything...">
+                        <input asp-for="@Model.SearchQuery" class="form-control form-control-lg ps-5 py-0 shadow-sm" placeholder="Search anything...">
                     </div>
                 </form>
             </div>
-            <div class="col col-12 col-md-4 col-lg-4">
-                <form class="" id="FilterForm" method="GET">
-                    <label asp-for="Filter">Filter</label>
+            <div class="col col-12 col-md-12 col-lg-4 pe-0 ps-lg-2 ps-md-0 ps-sm-0 ps-0 pt-lg-0 pt-sm-4 pt-3 ">
+                <form id="FilterForm-1" class="position-relative filter-form" method="GET">
+                   
                     @if (!string.IsNullOrEmpty(Model.SearchQuery))
                     {
                         <input type="hidden" name="searchQuery" asp-for="@Model.SearchQuery" />
@@ -63,7 +63,8 @@
                     {
                         <input type="hidden" name="pageSize" asp-for="@Model.PageSize" />
                     }
-                    <select class="form-control form-select-lg" asp-for="@Model.Filter" asp-items="@Model.Filters" onchange="this.form.submit()"></select>
+                    <label class="position-absolute" asp-for="@Model.Filter">Filter</label>
+                    <select class="form-control form-select-lg shadow-sm" asp-for="@Model.Filter" asp-items="@Model.Filters" onchange="this.form.submit()"></select>
                 </form>
             </div>
         </div>
