@@ -83,7 +83,7 @@
         {
             @foreach (var errand in Model.Errands)
             {
-                <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href='@Url.Page("./Details", new { ErrandId = errand.Id, ElevatorId = errand.ElevatorId })'">
+                <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href='@Url.Page("./Details", new { ErrandId = errand.Id,  errand.ElevatorId })'">
                     <td>@errand.Title</td>
                     <td>@errand.ErrandStatus</td>
                     <td>@errand.AssignedToName</td>
