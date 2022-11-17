@@ -10,7 +10,7 @@
 
 @if (Model.IsSuccess)
 {
-    <div class="border rounded-3 p-4 shadow">
+    <div class="border border-1 rounded-3 p-4 shadow bg-white">
         <div class="container">
             <div class="row align-items-center">
                 <div class="px-0 my-3 col-md-12 col-lg-8 ">
@@ -27,7 +27,7 @@
                             }
                             @if (!string.IsNullOrEmpty(Model.Parameters.OrderDirection))
                             {
-                                @Html.Hidden("OrderDirection",  Model.Parameters.OrderDirection)
+                                @Html.Hidden("OrderDirection", Model.Parameters.OrderDirection)
                             }
                             @if (!string.IsNullOrEmpty(Model.Parameters.Filter))
                             {
