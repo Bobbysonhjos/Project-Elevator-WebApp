@@ -7,7 +7,9 @@ body {
     font-size: .875rem;
 }
 
-
+.background {
+    background: #f2f2f2;
+}
 
 .feather {
     width: 16px;

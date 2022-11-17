@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="https://kit.fontawesome.com/30fc700348.js" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="background">
 
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         @if ((await AuthorizationService.AuthorizeAsync(User, AuthorizationPolicies.AdminAccess)).Succeeded)
@@ -88,7 +88,7 @@
     </div>
 
     <div class="container">
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 px-lg-5">
+        <main class="col-md-9 ms-sm-auto col-lg-10 bg-transparent">
             @RenderBody()
         </main>
     </div>
