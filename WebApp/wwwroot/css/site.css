@@ -155,6 +155,14 @@ body {
     text-decoration: none !important;
     color: inherit;
 }
+
+
+.filter-form label {
+    font-size: 16px;
+    top: -24px;
+    left: 2px;
+}
+
 input[type="checkbox"].toggle {
     opacity: 0;
     position: absolute;
