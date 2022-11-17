@@ -103,7 +103,7 @@ body {
 
 .form .fa-search {
     position: absolute;
-    top: 20px;
+    top: 18px;
     left: 20px;
     color: #9ca3af;
 }
@@ -155,6 +155,14 @@ body {
     text-decoration: none !important;
     color: inherit;
 }
+
+
+.filter-form label {
+    font-size: 16px;
+    top: -24px;
+    left: 2px;
+}
+
 input[type="checkbox"].toggle {
     opacity: 0;
     position: absolute;
