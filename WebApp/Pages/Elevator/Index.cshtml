@@ -1,7 +1,7 @@
 ﻿@page
 @using System.Globalization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model WebApp.Pages.Elevator.IndexModel
+@model IndexModel
 @{
     ViewData["Title"] = "Elevators";
 }
@@ -18,23 +18,23 @@
                         <i class="fa fa-search"></i>
                         @if (!string.IsNullOrEmpty(Model.Filter))
                         {
-                            <input type="hidden" name="filter" asp-for="@Model.Filter" />
+                            <input type="hidden" name="filter" asp-for="@Model.Filter"/>
                         }
                         @if (!string.IsNullOrEmpty(Model.Column))
                         {
-                            <input type="hidden" name="column" asp-for="@Model.Column" />
+                            <input type="hidden" name="column" asp-for="@Model.Column"/>
                         }
                         @if (!string.IsNullOrEmpty(Model.Order))
                         {
-                            <input type="hidden" name="order" asp-for="@Model.Order" />
+                            <input type="hidden" name="order" asp-for="@Model.Order"/>
                         }
                         @if (Model.PaginationMetadata.CurrentPage > 1)
                         {
-                            <input type="hidden" name="currentPage" asp-for="@Model.PaginationMetadata.CurrentPage" />
+                            <input type="hidden" name="currentPage" asp-for="@Model.PaginationMetadata.CurrentPage"/>
                         }
                         @if (Model.PageSize != 10)
                         {
-                            <input type="hidden" name="pageSize" asp-for="@Model.PageSize" />
+                            <input type="hidden" name="pageSize" asp-for="@Model.PageSize"/>
                         }
                         <input asp-for="@Model.SearchQuery" class="form-control form-control-lg ps-5 py-0 shadow-sm" placeholder="Search anything...">
                     </div>
@@ -42,26 +42,26 @@
             </div>
             <div class="col col-12 col-md-12 col-lg-4 pe-0 ps-lg-2 ps-md-0 ps-sm-0 ps-0 pt-lg-0 pt-sm-4 pt-3 ">
                 <form id="FilterForm-1" class="position-relative filter-form" method="GET">
-                   
+
                     @if (!string.IsNullOrEmpty(Model.SearchQuery))
                     {
-                        <input type="hidden" name="searchQuery" asp-for="@Model.SearchQuery" />
+                        <input type="hidden" name="searchQuery" asp-for="@Model.SearchQuery"/>
                     }
                     @if (!string.IsNullOrEmpty(Model.Column))
                     {
-                        <input type="hidden" name="column" asp-for="@Model.Column" />
+                        <input type="hidden" name="column" asp-for="@Model.Column"/>
                     }
                     @if (!string.IsNullOrEmpty(Model.Order))
                     {
-                        <input type="hidden" name="order" asp-for="@Model.Order" />
+                        <input type="hidden" name="order" asp-for="@Model.Order"/>
                     }
                     @if (Model.PaginationMetadata.CurrentPage > 1)
                     {
-                        <input type="hidden" name="currentPage" asp-for="@Model.PaginationMetadata.CurrentPage" />
+                        <input type="hidden" name="currentPage" asp-for="@Model.PaginationMetadata.CurrentPage"/>
                     }
                     @if (Model.PageSize != 10)
                     {
-                        <input type="hidden" name="pageSize" asp-for="@Model.PageSize" />
+                        <input type="hidden" name="pageSize" asp-for="@Model.PageSize"/>
                     }
                     <label class="position-absolute" asp-for="@Model.Filter">Filter</label>
                     <select class="form-control form-select-lg shadow-sm" asp-for="@Model.Filter" asp-items="@Model.Filters" onchange="this.form.submit()"></select>
@@ -69,81 +69,60 @@
             </div>
         </div>
     </div>
-
-
     <table class="table table-hover table-sm">
         <thead>
-            <tr>
-                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="id" asp-route-order="@Model.SetOrder("id")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Id</a><span class="fa @(Model.SetSortIcon("id"))"></span></th>
-                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="location" asp-route-order="@Model.SetOrder("location")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Location</a><span class="fa @(Model.SetSortIcon("location"))"></span></th>
-                <th scope="col" style="width: 10%"><a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="elevatorstatus" asp-route-order="@Model.SetOrder("elevatorstatus")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Status</a><span class="fa @(Model.SetSortIcon("elevatorstatus"))"></span></th>
-                <th scope="col" style="width: 15%"><a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="createddateutc" asp-route-order="@Model.SetOrder("createddateutc")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Created</a><span class="fa @(Model.SetSortIcon("createddateutc"))"></span></th>
+        <tr>
+            <th scope="col" style="width: 30%">
+                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="id" asp-route-order="@Model.SetOrder("id")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Id</a><span class="fa @(Model.SetSortIcon("id"))"></span>
+            </th>
+            <th scope="col" style="width: 30%">
+                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="location" asp-route-order="@Model.SetOrder("location")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Location</a><span class="fa @(Model.SetSortIcon("location"))"></span>
+            </th>
+            <th scope="col" style="width: 10%">
+                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="elevatorstatus" asp-route-order="@Model.SetOrder("elevatorstatus")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Status</a><span class="fa @(Model.SetSortIcon("elevatorstatus"))"></span>
+            </th>
+            <th scope="col" style="width: 15%">
+                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="createddateutc" asp-route-order="@Model.SetOrder("createddateutc")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Created</a><span class="fa @(Model.SetSortIcon("createddateutc"))"></span>
+            </th>
 
-            </tr>
+        </tr>
         </thead>
         <tbody>
-            @if (Model.Elevators.Any())
+        @if (Model.Elevators.Any())
+        {
+            @foreach (var elevator in Model.Elevators)
             {
-                @foreach (var elevator in Model.Elevators)
-                {
-                    <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href='@Url.Page("./Details", new { ElevatorId = elevator.Id  })'">
-                        <td>@elevator.Id</td>
-                        <td>@elevator.Location</td>
-                        <td>@elevator.ElevatorStatus</td>
-                        <td>@elevator.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
-
-                    </tr>
-                }
+                <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href = '@Url.Page("./Details", new { ElevatorId = elevator.Id })'">
+                    <td>@elevator.Id</td>
+                    <td>@elevator.Location</td>
+                    <td>@elevator.ElevatorStatus</td>
+                    <td>@elevator.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
+                </tr>
             }
-
+        }
         </tbody>
     </table>
-    <div class="container-fluid">
-        <div class="row">
-
+    <div class="container-fluid my-2">
+        <div class="row pt-3">
             <div class="col text-center">
-
                 @if (Model.PaginationMetadata!.HasPrevious)
                 {
-                    <a asp-page="/Elevator/Index" asp-route-filter="@Model.Filter" asp-route-column="@Model.Column" asp-route-order="@Model.Order" asp-route-searchQuery="@Model.SearchQuery" asp-route-currentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Prev</a>
+                    <a class="pagination-btn" asp-page="/Elevators/Index" asp-route-filter="@Model.Filter" asp-route-OrderBy="@Model.OrderBy"  asp-route-searchQuery="@Model.SearchQuery" asp-route-order="@Model.Order" asp-route-currentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-pageSize="@Model.PaginationMetadata.PageSize">
+                        <i class="fa-solid fa-angles-left fa-2xl"></i>
+                    </a>
                 }
-
-
             </div>
             <div class="col text-center">
-
-                Page @Model.PaginationMetadata.CurrentPage of total @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
-
-
-
-
-
+                Page @Model.PaginationMetadata.CurrentPage of @Model.PaginationMetadata.TotalPageCount ( @Model.PaginationMetadata.TotalItemCount )
             </div>
             <div class="col text-center">
                 @if (Model.PaginationMetadata.HasNext)
                 {
-                    <a asp-page="/Elevator/Index" asp-route-filter="@Model.Filter" asp-route-column="@Model.Column" asp-route-order="@Model.Order" asp-route-searchQuery="@Model.SearchQuery" asp-route-currentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                    <a class="pagination-btn" asp-page="/Elevators/Index" asp-route-filter="@Model.Filter" asp-route-OrderBy="@Model.OrderBy" asp-route-SearchQuery="@Model.SearchQuery" asp-route-order="@Model.Order" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
+                        <i class="fa-solid fa-angles-right fa-2xl"></i>
+                    </a>
                 }
-
             </div>
-
-
-
-
-
         </div>
-
-
-
-
     </div>
-
-
 </div>
-
-
-
-
-
-
-

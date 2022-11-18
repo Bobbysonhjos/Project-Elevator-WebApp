@@ -1,4 +1,5 @@
 using AutoMapper;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,6 +20,7 @@ public class IndexModel : PageModel
         _mapper = mapper;
         Elevators = new List<ElevatorViewModel>();
         Filters = new SelectListItem[]
+        
         {
             new() { Text = "None", Value = null }, new() { Text = "Enabled", Value = "enabled" },
             new() { Text = "Disabled", Value = "disabled" }, new() { Text = "Error", Value = "error" }
