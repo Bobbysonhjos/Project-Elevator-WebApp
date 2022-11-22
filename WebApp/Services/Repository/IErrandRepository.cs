@@ -13,7 +13,8 @@ namespace WebApp.Services.Repository
         public Task<ErrandDto> GetErrandByIdForElevatorAsync(string elevatorId, string errandId);
         public Task<(ErrandWithCommentsDto? Errand, PaginationMetadata? paginationMetadata, bool IsSuccess)> GetErrandByIdForElevatorAsync(string elevatorId, string errandId, ErrandWithCommentsResourceParameters parameters);
         public Task<(ErrandDto? Errand, bool IsSuccess)> CreateErrandForElevatorAsync(string elevatorId, string title, string description, string assignedToId);
-        public Task<ErrandDto> UpdateErrandForElevatorAsync();
+        public Task<(ErrandDto? Errand, bool IsSuccess)> GetErrandById(string elevatorId, string errandId);
+        public Task<bool> UpdateErrandForElevatorAsync(string elevatorId, string errandId, string title, string description, string errandStatus, string assignedToId);
     }
 
 
@@ -177,9 +178,60 @@ namespace WebApp.Services.Repository
             return (null, false);
         }
 
-        public Task<ErrandDto> UpdateErrandForElevatorAsync()
+        public async Task<(ErrandDto? Errand, bool IsSuccess)> GetErrandById(string elevatorId, string errandId)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(elevatorId) || string.IsNullOrEmpty(errandId))
+                return (null, false);
+            try
+            {
+                using var client = _httpClientFactory.CreateClient("APIClient");
+
+                var httpRequestUri = $"elevators/{elevatorId}/errands/{errandId}?includeComments=false";
+
+                var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
+
+                var response = await client.SendAsync(httpRequest);
+
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception();
+
+                var data = JsonConvert.DeserializeObject<HttpResponse<ErrandDto>>(await response.Content.ReadAsStringAsync());
+
+                return (data.Data, true);
+            }
+            catch
+            {
+                // Ignored
+            }
+            return (null, false);
         }
+
+        public async Task<bool> UpdateErrandForElevatorAsync(string elevatorId, string errandId, string title, string description,
+            string errandStatus, string assignedToId)
+        {
+            try
+            {
+                using var client = _httpClientFactory.CreateClient("APIClient");
+                var httpRequestUri = $"elevators/{elevatorId}/errands/{errandId}";
+                var httpRequest = new HttpRequestMessage(HttpMethod.Put, httpRequestUri)
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(new { title, description, assignedToId, errandStatus }), System.Text.Encoding.UTF8, "application/json")
+                };
+
+                var response = await client.SendAsync(httpRequest);
+
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception();
+
+
+                return true;
+            }
+            catch
+            {
+                // Ignored
+            }
+            return false;
+        }
+
     }
 }
