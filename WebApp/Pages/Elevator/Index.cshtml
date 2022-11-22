@@ -16,54 +16,49 @@
                 <form method="GET">
                     <div class="form">
                         <i class="fa fa-search"></i>
-                        @if (!string.IsNullOrEmpty(Model.Filter))
+                        @if (Model.Parameters.PageSize != 10)
                         {
-                            <input type="hidden" name="filter" asp-for="@Model.Filter"/>
+                            @Html.Hidden("PageSize", Model.Parameters.PageSize)
                         }
-                        @if (!string.IsNullOrEmpty(Model.Column))
+                        @if (!string.IsNullOrEmpty(Model.Parameters.OrderBy))
                         {
-                            <input type="hidden" name="column" asp-for="@Model.Column"/>
+                            @Html.Hidden("OrderBy", Model.Parameters.OrderBy)
                         }
-                        @if (!string.IsNullOrEmpty(Model.Order))
+                        @if (!string.IsNullOrEmpty(Model.Parameters.OrderDirection))
                         {
-                            <input type="hidden" name="order" asp-for="@Model.Order"/>
+                            @Html.Hidden("OrderDirection", Model.Parameters.OrderDirection)
                         }
-                        @if (Model.PaginationMetadata.CurrentPage > 1)
+                        @if (!string.IsNullOrEmpty(Model.Parameters.Filter))
                         {
-                            <input type="hidden" name="currentPage" asp-for="@Model.PaginationMetadata.CurrentPage"/>
+                            @Html.Hidden("Filter",Model.Parameters.Filter)
                         }
-                        @if (Model.PageSize != 10)
-                        {
-                            <input type="hidden" name="pageSize" asp-for="@Model.PageSize"/>
-                        }
-                        <input asp-for="@Model.SearchQuery" class="form-control form-control-lg ps-5 py-0 shadow-sm" placeholder="Search anything...">
+                        <input name="SearchQuery" class="form-control form-control-lg ps-5 py-0 shadow-sm" value="@Model.Parameters.SearchQuery" placeholder="Search anything...">
                     </div>
                 </form>
             </div>
             <div class="col col-12 col-md-12 col-lg-4 pe-0 ps-lg-2 ps-md-0 ps-sm-0 ps-0 pt-lg-0 pt-sm-4 pt-3 ">
                 <form id="FilterForm-1" class="position-relative filter-form" method="GET">
-
-                    @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                    @if (Model.Parameters.CurrentPage > 1)
                     {
-                        <input type="hidden" name="searchQuery" asp-for="@Model.SearchQuery"/>
+                        @Html.Hidden("CurrentPage", Model.Parameters.CurrentPage)
                     }
-                    @if (!string.IsNullOrEmpty(Model.Column))
+                    @if (Model.Parameters.PageSize != 10)
                     {
-                        <input type="hidden" name="column" asp-for="@Model.Column"/>
+                        @Html.Hidden("PageSize", Model.Parameters.PageSize)
                     }
-                    @if (!string.IsNullOrEmpty(Model.Order))
+                    @if (!string.IsNullOrEmpty(Model.Parameters.OrderBy))
                     {
-                        <input type="hidden" name="order" asp-for="@Model.Order"/>
+                        @Html.Hidden("OrderBy", Model.Parameters.OrderBy)
                     }
-                    @if (Model.PaginationMetadata.CurrentPage > 1)
+                    @if (!string.IsNullOrEmpty(Model.Parameters.OrderDirection))
                     {
-                        <input type="hidden" name="currentPage" asp-for="@Model.PaginationMetadata.CurrentPage"/>
+                        @Html.Hidden("OrderDirection",  Model.Parameters.OrderDirection)
                     }
-                    @if (Model.PageSize != 10)
+                    @if (!string.IsNullOrEmpty(Model.Parameters.SearchQuery))
                     {
-                        <input type="hidden" name="pageSize" asp-for="@Model.PageSize"/>
+                        @Html.Hidden("SearchQuery",Model.Parameters.SearchQuery)
                     }
-                    <label class="position-absolute" asp-for="@Model.Filter">Filter</label>
+                    <label class="position-absolute" asp-for="@Model.Parameters.Filter">Filter</label>
                     <select class="form-control form-select-lg shadow-sm" asp-for="@Model.Filter" asp-items="@Model.Filters" onchange="this.form.submit()"></select>
                 </form>
             </div>
@@ -71,35 +66,26 @@
     </div>
     <table class="table table-hover table-sm">
         <thead>
-        <tr>
-            <th scope="col" style="width: 30%">
-                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="id" asp-route-order="@Model.SetOrder("id")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Id</a><span class="fa @(Model.SetSortIcon("id"))"></span>
-            </th>
-            <th scope="col" style="width: 30%">
-                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="location" asp-route-order="@Model.SetOrder("location")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Location</a><span class="fa @(Model.SetSortIcon("location"))"></span>
-            </th>
-            <th scope="col" style="width: 10%">
-                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="elevatorstatus" asp-route-order="@Model.SetOrder("elevatorstatus")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Status</a><span class="fa @(Model.SetSortIcon("elevatorstatus"))"></span>
-            </th>
-            <th scope="col" style="width: 15%">
-                <a class="table-sort-link" asp-route-filter="@Model.Filter" asp-route-column="createddateutc" asp-route-order="@Model.SetOrder("createddateutc")" asp-route-searchQuery="@Model.SearchQuery" asp-route-pageSize="@Model.PageSize">Created</a><span class="fa @(Model.SetSortIcon("createddateutc"))"></span>
-            </th>
-
-        </tr>
+            <tr>
+                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="id" asp-route-OrderDirection="@Model.SetOrder("id")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Id</a><span class="fa @(Model.SetSortIcon("id"))"></span></th>
+                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="location" asp-route-OrderDirection="@Model.SetOrder("location")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Location</a><span class="fa @(Model.SetSortIcon("location"))"></span></th>
+                <th scope="col" style="width: 10%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="elevatorstatus" asp-route-OrderDirection="@Model.SetOrder("elevatorstatus")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Status</a><span class="fa @(Model.SetSortIcon("elevatorstatus"))"></span></th>
+                <th scope="col" style="width: 15%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="createddateutc" asp-route-OrderDirection="@Model.SetOrder("createddateutc")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created</a><span class="fa @(Model.SetSortIcon("createddateutc"))"></span></th>
+            </tr>
         </thead>
         <tbody>
-        @if (Model.Elevators.Any())
-        {
-            @foreach (var elevator in Model.Elevators)
+            @if (Model.Elevators.Any())
             {
-                <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href = '@Url.Page("./Details", new { ElevatorId = elevator.Id })'">
-                    <td>@elevator.Id</td>
-                    <td>@elevator.Location</td>
-                    <td>@elevator.ElevatorStatus</td>
-                    <td>@elevator.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
-                </tr>
+                @foreach (var elevator in Model.Elevators)
+                {
+                    <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href = '@Url.Page("./Details", new { ElevatorId = elevator.Id })'">
+                        <td>@elevator.Id</td>
+                        <td>@elevator.Location</td>
+                        <td>@elevator.ElevatorStatus</td>
+                        <td>@elevator.CreatedDateUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)</td>
+                    </tr>
+                }
             }
-        }
         </tbody>
     </table>
     <div class="container-fluid my-2">
@@ -107,7 +93,7 @@
             <div class="col text-center">
                 @if (Model.PaginationMetadata!.HasPrevious)
                 {
-                    <a class="pagination-btn" asp-page="/Elevators/Index" asp-route-filter="@Model.Filter" asp-route-OrderBy="@Model.OrderBy"  asp-route-searchQuery="@Model.SearchQuery" asp-route-order="@Model.Order" asp-route-currentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-pageSize="@Model.PaginationMetadata.PageSize">
+                    <a class="pagination-btn" asp-page="/Elevator/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
                         <i class="fa-solid fa-angles-left fa-2xl"></i>
                     </a>
                 }
@@ -118,7 +104,7 @@
             <div class="col text-center">
                 @if (Model.PaginationMetadata.HasNext)
                 {
-                    <a class="pagination-btn" asp-page="/Elevators/Index" asp-route-filter="@Model.Filter" asp-route-OrderBy="@Model.OrderBy" asp-route-SearchQuery="@Model.SearchQuery" asp-route-order="@Model.Order" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
+                    <a class="pagination-btn" asp-page="/Elevator/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
                         <i class="fa-solid fa-angles-right fa-2xl"></i>
                     </a>
                 }
