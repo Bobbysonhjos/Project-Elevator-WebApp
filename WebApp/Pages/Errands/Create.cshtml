@@ -3,3 +3,44 @@
 @{
     ViewData["Title"] = "Create";
 }
+<div class="container shadow border border-1 rounded-3 my-5 p-4 no-select bg-white">
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label" asp-for="Title">Title</label>
+            <input class="form-control" asp-for="Title" placeholder="New errand for elevator ...">
+            <span class="text-danger" asp-validation-for="Title"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea class="form-control" asp-for="Description" rows="5"></textarea>
+            <span class="text-danger" asp-validation-for="Description"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="AssignedToId">Assigned Technician</label>
+            <select class="form-control" list="datalistOptions" asp-for="AssignedToId" asp-items="Model.Technicians">
+                <option value="" disabled selected>Select a technician</option>
+            </select>
+            <span class="text-danger" asp-validation-for="AssignedToId"></span>
+        </div>
+        <div class="mb-3">
+            @if (Model.RoutedElevatorId)
+            {
+                <label class="form-label" asp-for="ElevatorId">Elevator</label>
+                <select class="form-control" list="datalistOptions" asp-for="ElevatorId" disabled asp-items="Model.Elevators">
+                    <option value="" disabled selected>Select a elevator</option>
+                </select>
+            }
+            else
+            {
+                <label class="form-label" asp-for="ElevatorId">Elevator</label>
+                <select class="form-control" list="datalistOptions" asp-for="ElevatorId" asp-items="Model.Elevators">
+                    <option value="" disabled selected>Select a elevator</option>
+                </select>
+                <span class="text-danger" asp-validation-for="ElevatorId"></span>
+            }
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>

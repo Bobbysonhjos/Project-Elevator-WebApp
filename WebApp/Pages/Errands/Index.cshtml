@@ -96,7 +96,7 @@
         </table>
 
 
-        <div class="container-fluid my-2">
+        <div class="container-fluid my-2 position-relative">
             <div class="row pt-3">
                 <div class="col text-center">
                     @if (Model.PaginationMetadata!.HasPrevious)
@@ -118,6 +118,7 @@
                     }
                 </div>
             </div>
+            <div class="position-absolute top-0 mt-2 end-0"><a class="btn btn-primary" role="button" asp-page="./Create">Create</a></div>
         </div>
     </div>
 }

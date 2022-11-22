@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using IdentityModel.Client;
+using Newtonsoft.Json;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.ResourceParameters;
@@ -11,7 +12,7 @@ namespace WebApp.Services.Repository
         public Task<(IEnumerable<ErrandDto> Errands, PaginationMetadata? PaginationMetadata, bool IsSuccess)> GetAllErrandsPaginatedAsync(ErrandsResourceParameters parameters);
         public Task<ErrandDto> GetErrandByIdForElevatorAsync(string elevatorId, string errandId);
         public Task<(ErrandWithCommentsDto? Errand, PaginationMetadata? paginationMetadata, bool IsSuccess)> GetErrandByIdForElevatorAsync(string elevatorId, string errandId, ErrandWithCommentsResourceParameters parameters);
-        public Task<ErrandDto> CreateErrandForElevatorAsync();
+        public Task<(ErrandDto? Errand, bool IsSuccess)> CreateErrandForElevatorAsync(string elevatorId, string title, string description, string assignedToId);
         public Task<ErrandDto> UpdateErrandForElevatorAsync();
     }
 
@@ -32,7 +33,7 @@ namespace WebApp.Services.Repository
             {
                 if (string.IsNullOrEmpty(elevatorId))
                     throw new Exception();
-               
+
                 using var client = _httpClientFactory.CreateClient("APIClient");
                 var request = new HttpRequestMessage(HttpMethod.Get, $"elevators/{elevatorId}/errands");
                 var response = await client.SendAsync(request);
@@ -44,7 +45,7 @@ namespace WebApp.Services.Repository
 
                 return errands;
             }
-            catch 
+            catch
             {
                 // Ignored
             }
@@ -73,7 +74,7 @@ namespace WebApp.Services.Repository
                 if (!response.IsSuccessStatusCode)
                     throw new Exception();
 
-                var data = JsonConvert.DeserializeObject<HttpResponse<ErrandDto>>(await response.Content.ReadAsStringAsync());
+                var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<IEnumerable<ErrandDto>>>(await response.Content.ReadAsStringAsync());
 
                 return (data.Data, data.PaginationMetadata, true);
             }
@@ -116,7 +117,7 @@ namespace WebApp.Services.Repository
         public async Task<(ErrandWithCommentsDto? Errand, PaginationMetadata? paginationMetadata, bool IsSuccess)> GetErrandByIdForElevatorAsync(string elevatorId, string errandId, ErrandWithCommentsResourceParameters parameters)
         {
             if (string.IsNullOrEmpty(elevatorId) || string.IsNullOrEmpty(errandId))
-                return (null,null,false);
+                return (null, null, false);
             try
             {
                 using var client = _httpClientFactory.CreateClient("APIClient");
@@ -134,7 +135,7 @@ namespace WebApp.Services.Repository
                 if (!response.IsSuccessStatusCode)
                     throw new Exception();
 
-                var data = JsonConvert.DeserializeObject<HttpSingleResponse<ErrandWithCommentsDto>>(await response.Content.ReadAsStringAsync());
+                var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<ErrandWithCommentsDto>>(await response.Content.ReadAsStringAsync());
 
                 return (data.Data, data.PaginationMetadata, true);
             }
@@ -142,12 +143,38 @@ namespace WebApp.Services.Repository
             {
                 // Ignored
             }
-            return (null,null,false);
+            return (null, null, false);
         }
 
-        public Task<ErrandDto> CreateErrandForElevatorAsync()
+        public async Task<(ErrandDto? Errand, bool IsSuccess)> CreateErrandForElevatorAsync(string elevatorId, string title, string description, string assignedToId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var client = _httpClientFactory.CreateClient("APIClient");
+                var httpRequestUri = $"elevators/{elevatorId}/errands";
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, httpRequestUri)
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(new { title, description, assignedToId }), System.Text.Encoding.UTF8, "application/json")
+                };
+
+                var response = await client.SendAsync(httpRequest);
+
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception();
+
+                var data = JsonConvert.DeserializeObject<HttpResponse<ErrandDto>>(await response.Content.ReadAsStringAsync());
+
+                if (data.Data is null)
+                    throw new Exception();
+
+
+                return (data.Data, true);
+            }
+            catch
+            {
+                // Ignored
+            }
+            return (null, false);
         }
 
         public Task<ErrandDto> UpdateErrandForElevatorAsync()
