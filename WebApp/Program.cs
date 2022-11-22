@@ -22,6 +22,7 @@ builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IElevatorRepository, ApiElevatorRepository>();
 builder.Services.AddScoped<IErrandRepository, ApiErrandRepository>();
 builder.Services.AddScoped<ICommentRepository, ApiCommentRepository>();
+builder.Services.AddScoped<IUserRepository, ApiUserRepository>();
 
 builder.Services.AddHttpClient("APIClient", options =>
 {
