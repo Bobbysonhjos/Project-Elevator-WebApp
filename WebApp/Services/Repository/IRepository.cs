@@ -1,4 +1,4 @@
-﻿namespace WebApp.Services.Repository
+namespace WebApp.Services.Repository
 {
     public interface IRepository
     {
@@ -10,8 +10,6 @@
 
     public class Repository : IRepository
     {
-
-
         public Repository(IElevatorRepository elevators, IErrandRepository errands, ICommentRepository comments, IUserRepository users)
         {
             Comments = comments;
