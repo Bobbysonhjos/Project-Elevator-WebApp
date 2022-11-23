@@ -1,8 +1,8 @@
 ﻿namespace WebApp.Helpers
 {
-    public class HttpSingleResponse<T> where T : class
+    public class PaginatedHttpResponse<T>
     {
         public PaginationMetadata PaginationMetadata { get; set; } = null!;
-        public T Data { get; set; } = null!;
+        public T Data { get; set; } = default!;
     }
 }

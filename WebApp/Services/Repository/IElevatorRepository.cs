@@ -1,15 +1,16 @@
 ﻿using Newtonsoft.Json;
 using WebApp.Helpers;
 using WebApp.Models;
+using WebApp.ResourceParameters;
 
 namespace WebApp.Services.Repository
 {
     public interface IElevatorRepository
     {
-        public Task<(IEnumerable<ElevatorDto> Elevators, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetAllAsync(string? filter, string? searchQuery, string? orderBy, int currentPage = 1, int pageSize = 10);
+        public Task<(IEnumerable<ElevatorDto> Elevators, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetAllPaginatedAsync(ElevatorsResourceParameters parameters);
         public Task<ElevatorDto?> GetByIdAsync(string id);
         public Task<(ElevatorWithErrandsDto Elevator, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetByIdWithErrandsAsync(string id, string? filter, string? searchQuery, string? orderBy, int currentPage = 1, int pageSize = 10);
-       
+        public Task<IEnumerable<ElevatorIdDto>?> GetAllElevatorIds();
         public Task<ElevatorDto> UpdateAsync();
     }
 
@@ -24,19 +25,19 @@ namespace WebApp.Services.Repository
         }
 
         public async Task<(IEnumerable<ElevatorDto> Elevators, PaginationMetadata PaginationMetadata, bool IsSuccess)>
-            GetAllAsync(string? filter, string? searchQuery, string? orderBy, int currentPage = 1, int pageSize = 10)
+            GetAllPaginatedAsync(ElevatorsResourceParameters parameters)
         {
             try
             {
                 using var client = _httpClientFactory.CreateClient("APIClient");
 
-                var httpRequestUri = $"elevators?currentPage={currentPage}&pageSize={pageSize}";
-                if (!string.IsNullOrEmpty(filter))
-                    httpRequestUri += $"&filter={filter}";
-                if (!string.IsNullOrEmpty(searchQuery))
-                    httpRequestUri += $"&searchQuery={searchQuery}";
-                if (!string.IsNullOrEmpty(orderBy))
-                    httpRequestUri += $"&orderBy={orderBy}";
+                var httpRequestUri = $"elevators?currentPage={parameters.CurrentPage}&pageSize={parameters.PageSize}";
+                if (!string.IsNullOrEmpty(parameters.Filter))
+                    httpRequestUri += $"&filter={parameters.Filter}";
+                if (!string.IsNullOrEmpty(parameters.SearchQuery))
+                    httpRequestUri += $"&searchQuery={parameters.SearchQuery}";
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                    httpRequestUri += $"&orderBy={parameters.OrderBy},{parameters.OrderDirection}";
 
 
 
@@ -47,7 +48,7 @@ namespace WebApp.Services.Repository
                 if (!response.IsSuccessStatusCode)
                     throw new Exception();
 
-                var data = JsonConvert.DeserializeObject<HttpResponse<ElevatorDto>>(await response.Content.ReadAsStringAsync());
+                var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<IEnumerable<ElevatorDto>>>(await response.Content.ReadAsStringAsync());
 
                 return (data.Data, data.PaginationMetadata, true);
             }
@@ -106,7 +107,7 @@ namespace WebApp.Services.Repository
                 if (!response.IsSuccessStatusCode)
                     throw new Exception();
 
-                var data = JsonConvert.DeserializeObject<HttpSingleResponse<ElevatorWithErrandsDto>>(await response.Content.ReadAsStringAsync());
+                var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<ElevatorWithErrandsDto>>(await response.Content.ReadAsStringAsync());
                 if (data.Data is null || data.PaginationMetadata is null)
                     throw new Exception();
                    
@@ -118,6 +119,33 @@ namespace WebApp.Services.Repository
                 // Ignored
             }
             return (null,null,false)!;
+        }
+
+        public async Task<IEnumerable<ElevatorIdDto>?> GetAllElevatorIds()
+        {
+            try
+            {
+
+                var httpRequestUri = $"elevators/ids";
+
+                using var client = _httpClientFactory.CreateClient("APIClient");
+                var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
+
+                var response = await client.SendAsync(httpRequest);
+
+                if (!response.IsSuccessStatusCode)
+                    throw new Exception();
+
+                var data = JsonConvert.DeserializeObject<HttpResponse<IEnumerable<ElevatorIdDto>>>(await response.Content.ReadAsStringAsync());
+                
+
+                return data.Data;
+            }
+            catch
+            {
+                // Ignored
+            }
+            return null;
         }
 
         public Task<ElevatorDto> UpdateAsync()
