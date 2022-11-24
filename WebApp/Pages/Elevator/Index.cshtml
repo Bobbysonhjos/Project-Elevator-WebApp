@@ -93,7 +93,7 @@
             <div class="col text-center">
                 @if (Model.PaginationMetadata!.HasPrevious)
                 {
-                    <a class="pagination-btn" asp-page="/Elevators/Index" asp-route-filter="@Model.Filter" asp-route-OrderBy="@Model.OrderBy"  asp-route-searchQuery="@Model.SearchQuery" asp-route-order="@Model.Order" asp-route-currentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-pageSize="@Model.PaginationMetadata.PageSize">
+                    <a class="pagination-btn" asp-page="/Elevator/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage - 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
                         <i class="fa-solid fa-angles-left fa-2xl"></i>
                     </a>
                 }
@@ -104,7 +104,7 @@
             <div class="col text-center">
                 @if (Model.PaginationMetadata.HasNext)
                 {
-                    <a class="pagination-btn" asp-page="/Elevators/Index" asp-route-filter="@Model.Filter" asp-route-OrderBy="@Model.OrderBy" asp-route-SearchQuery="@Model.SearchQuery" asp-route-order="@Model.Order" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
+                    <a class="pagination-btn" asp-page="/Elevator/Index" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="@Model.Parameters.OrderBy" asp-route-OrderDirection="@Model.Parameters.OrderDirection" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-CurrentPage="@(Model.PaginationMetadata.CurrentPage + 1)" asp-route-PageSize="@Model.PaginationMetadata.PageSize">
                         <i class="fa-solid fa-angles-right fa-2xl"></i>
                     </a>
                 }

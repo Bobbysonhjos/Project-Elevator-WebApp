@@ -16,7 +16,6 @@
             </a>
         </div>
     </div>
-
     <div class="row row-eq-height p-4">
         <div class="col-lg-6">
             <div class="row">
@@ -84,7 +83,6 @@
                     <label class="btn btn-outline-primary" for="btncheck2">Reset</label>
                 </div>
             </div>
-
             <div class="row mb-3 me-2" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2 mb-5" role="group" aria-label="First group">
                     <button type="button" class="btn btn-primary">Kv</button>
@@ -95,15 +93,12 @@
                     <button type="button" class="btn btn-primary">4</button>
                     <button type="button" class="btn btn-primary">5</button>
                 </div>
-               
             </div>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a class="btn btn-outline-primary" role="button" asp-page="./Create">Create</a>
+                <a class="btn btn-outline-primary" role="button" asp-page="/Errands/Create" asp-route-elevatorId="@Model.Elevator.Id">Create</a>
             </div>
         </div>
-
     </div>
-
     <div class="px-0 my-3 col-md-12 col-lg-12">
         <table class="table table-hover table-sm">
             <thead>
