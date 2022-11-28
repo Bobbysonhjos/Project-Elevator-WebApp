@@ -3,154 +3,154 @@ using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.ResourceParameters;
 
-namespace WebApp.Services.Repository
+namespace WebApp.Services.Repository;
+
+public interface IElevatorRepository
 {
-    public interface IElevatorRepository
+    public Task<(IEnumerable<ElevatorDto> Elevators, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetAllPaginatedAsync(ElevatorsResourceParameters parameters);
+    public Task<ElevatorDto?> GetByIdAsync(string id);
+    public Task<(ElevatorWithErrandsDto Elevator, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetByIdWithErrandsAsync(string id, string? filter, string? searchQuery, string? orderBy, int currentPage = 1, int pageSize = 10);
+    public Task<IEnumerable<ElevatorIdDto>?> GetAllElevatorIds();
+    public Task<ElevatorDto> UpdateAsync();
+}
+
+
+public class ApiElevatorRepository : IElevatorRepository
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public ApiElevatorRepository(IHttpClientFactory httpClientFactory)
     {
-        public Task<(IEnumerable<ElevatorDto> Elevators, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetAllPaginatedAsync(ElevatorsResourceParameters parameters);
-        public Task<ElevatorDto?> GetByIdAsync(string id);
-        public Task<(ElevatorWithErrandsDto Elevator, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetByIdWithErrandsAsync(string id, string? filter, string? searchQuery, string? orderBy, int currentPage = 1, int pageSize = 10);
-        public Task<IEnumerable<ElevatorIdDto>?> GetAllElevatorIds();
-        public Task<ElevatorDto> UpdateAsync();
+        _httpClientFactory = httpClientFactory;
     }
 
-
-    public class ApiElevatorRepository : IElevatorRepository
+    public async Task<(IEnumerable<ElevatorDto> Elevators, PaginationMetadata PaginationMetadata, bool IsSuccess)>
+        GetAllPaginatedAsync(ElevatorsResourceParameters parameters)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public ApiElevatorRepository(IHttpClientFactory httpClientFactory)
+        try
         {
-            _httpClientFactory = httpClientFactory;
-        }
+            using var client = _httpClientFactory.CreateClient("APIClient");
 
-        public async Task<(IEnumerable<ElevatorDto> Elevators, PaginationMetadata PaginationMetadata, bool IsSuccess)>
-            GetAllPaginatedAsync(ElevatorsResourceParameters parameters)
+            var httpRequestUri = $"elevators?currentPage={parameters.CurrentPage}&pageSize={parameters.PageSize}";
+            if (!string.IsNullOrEmpty(parameters.Filter))
+                httpRequestUri += $"&filter={parameters.Filter}";
+            if (!string.IsNullOrEmpty(parameters.SearchQuery))
+                httpRequestUri += $"&searchQuery={parameters.SearchQuery}";
+            if (!string.IsNullOrEmpty(parameters.OrderBy))
+                httpRequestUri += $"&orderBy={parameters.OrderBy},{parameters.OrderDirection}";
+
+
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
+
+            var response = await client.SendAsync(httpRequest);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception();
+
+            var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<IEnumerable<ElevatorDto>>>(await response.Content.ReadAsStringAsync());
+
+            return (data.Data, data.PaginationMetadata, true);
+        }
+        catch
         {
-            try
-            {
-                using var client = _httpClientFactory.CreateClient("APIClient");
-
-                var httpRequestUri = $"elevators?currentPage={parameters.CurrentPage}&pageSize={parameters.PageSize}";
-                if (!string.IsNullOrEmpty(parameters.Filter))
-                    httpRequestUri += $"&filter={parameters.Filter}";
-                if (!string.IsNullOrEmpty(parameters.SearchQuery))
-                    httpRequestUri += $"&searchQuery={parameters.SearchQuery}";
-                if (!string.IsNullOrEmpty(parameters.OrderBy))
-                    httpRequestUri += $"&orderBy={parameters.OrderBy},{parameters.OrderDirection}";
-
-
-
-                var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
-
-                var response = await client.SendAsync(httpRequest);
-
-                if (!response.IsSuccessStatusCode)
-                    throw new Exception();
-
-                var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<IEnumerable<ElevatorDto>>>(await response.Content.ReadAsStringAsync());
-
-                return (data.Data, data.PaginationMetadata, true);
-            }
-            catch
-            {
-                // Ignored
-            }
-            return (Enumerable.Empty<ElevatorDto>(), null, false)!;
+            // Ignored
         }
+        return (Enumerable.Empty<ElevatorDto>(), null, false)!;
+    }
 
-        public async Task<ElevatorDto?> GetByIdAsync(string id)
+    public async Task<ElevatorDto?> GetByIdAsync(string id)
+    {
+        try
         {
-            try
-            {
-                if (string.IsNullOrEmpty(id))
-                    throw new Exception();                    
-               
-                using var client = _httpClientFactory.CreateClient("APIClient");
-                var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"elevators/{id}");
-                var response = await client.SendAsync(httpRequest);
+            if (string.IsNullOrEmpty(id))
+                throw new Exception();
 
-                if (!response.IsSuccessStatusCode)
-                    throw new Exception();
+            using var client = _httpClientFactory.CreateClient("APIClient");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"elevators/{id}");
+            var response = await client.SendAsync(httpRequest);
 
-                var elevator = JsonConvert.DeserializeObject<ElevatorDto>(await response.Content.ReadAsStringAsync());
+            if (!response.IsSuccessStatusCode)
+                throw new Exception();
 
-                return elevator;
-            }
-            catch
-            {
-                // Ignored
-            }
-            return null!;
+            var elevator = JsonConvert.DeserializeObject<ElevatorDto>(await response.Content.ReadAsStringAsync());
+
+            return elevator;
         }
-
-        public async Task<(ElevatorWithErrandsDto Elevator, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetByIdWithErrandsAsync(string id,string? filter, string? searchQuery, string? orderBy, int currentPage = 1, int pageSize = 10)
+        catch
         {
-            try
-            {
-                if (string.IsNullOrEmpty(id))
-                    throw new Exception();
-
-                var httpRequestUri = $"elevators/{id}?includeErrands=true&currentPage={currentPage}&pageSize={pageSize}";
-                if (!string.IsNullOrEmpty(filter))
-                    httpRequestUri += $"&filter={filter}";
-                if (!string.IsNullOrEmpty(searchQuery))
-                    httpRequestUri += $"&searchQuery={searchQuery}";
-                if (!string.IsNullOrEmpty(orderBy))
-                    httpRequestUri += $"&orderBy={orderBy}";
-
-                using var client = _httpClientFactory.CreateClient("APIClient");
-                var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
-
-                var response = await client.SendAsync(httpRequest);
-
-                if (!response.IsSuccessStatusCode)
-                    throw new Exception();
-
-                var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<ElevatorWithErrandsDto>>(await response.Content.ReadAsStringAsync());
-                if (data.Data is null || data.PaginationMetadata is null)
-                    throw new Exception();
-                   
-               
-                return (data.Data, data.PaginationMetadata, true);
-            }
-            catch 
-            {
-                // Ignored
-            }
-            return (null,null,false)!;
+            // Ignored
         }
+        return null!;
+    }
 
-        public async Task<IEnumerable<ElevatorIdDto>?> GetAllElevatorIds()
+    public async Task<(ElevatorWithErrandsDto Elevator, PaginationMetadata PaginationMetadata, bool IsSuccess)> GetByIdWithErrandsAsync(string id, string? filter, string? searchQuery, string? orderBy, int currentPage = 1, int pageSize = 10)
+    {
+        try
         {
-            try
-            {
+            if (string.IsNullOrEmpty(id))
+                throw new Exception();
 
-                var httpRequestUri = $"elevators/ids";
+            var httpRequestUri = $"elevators/{id}?includeErrands=true&currentPage={currentPage}&pageSize={pageSize}";
+            if (!string.IsNullOrEmpty(filter))
+                httpRequestUri += $"&filter={filter}";
+            if (!string.IsNullOrEmpty(searchQuery))
+                httpRequestUri += $"&searchQuery={searchQuery}";
+            if (!string.IsNullOrEmpty(orderBy))
+                httpRequestUri += $"&orderBy={orderBy}";
 
-                using var client = _httpClientFactory.CreateClient("APIClient");
-                var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
+            using var client = _httpClientFactory.CreateClient("APIClient");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
 
-                var response = await client.SendAsync(httpRequest);
+            var response = await client.SendAsync(httpRequest);
 
-                if (!response.IsSuccessStatusCode)
-                    throw new Exception();
+            if (!response.IsSuccessStatusCode)
+                throw new Exception();
 
-                var data = JsonConvert.DeserializeObject<HttpResponse<IEnumerable<ElevatorIdDto>>>(await response.Content.ReadAsStringAsync());
-                
+            var data = JsonConvert.DeserializeObject<PaginatedHttpResponse<ElevatorWithErrandsDto>>(await response.Content.ReadAsStringAsync());
+            if (data.Data is null || data.PaginationMetadata is null)
+                throw new Exception();
 
-                return data.Data;
-            }
-            catch
-            {
-                // Ignored
-            }
-            return null;
+
+            return (data.Data, data.PaginationMetadata, true);
         }
-
-        public Task<ElevatorDto> UpdateAsync()
+        catch
         {
-            throw new NotImplementedException();
+            // Ignored
         }
+        return (null, null, false)!;
+    }
+
+    public async Task<IEnumerable<ElevatorIdDto>?> GetAllElevatorIds()
+    {
+        try
+        {
+
+            var httpRequestUri = $"elevators/ids";
+
+            using var client = _httpClientFactory.CreateClient("APIClient");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, httpRequestUri);
+
+            var response = await client.SendAsync(httpRequest);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception();
+
+            var data = JsonConvert.DeserializeObject<HttpResponse<IEnumerable<ElevatorIdDto>>>(await response.Content.ReadAsStringAsync());
+
+
+            return data.Data;
+        }
+        catch
+        {
+            // Ignored
+        }
+        return null;
+    }
+
+    public Task<ElevatorDto> UpdateAsync()
+    {
+        throw new NotImplementedException();
     }
 }
+

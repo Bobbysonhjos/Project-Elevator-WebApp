@@ -19,6 +19,8 @@ namespace WebApp.Helpers.AutoMapper
             CreateMap<ErrandDto, Pages.Errands.IndexModel.ErrandViewModel>();
             CreateMap<ErrandWithCommentsDto, Pages.Errands.DetailsModel.ErrandViewModel>();
             CreateMap<CommentDto,Pages.Errands.DetailsModel.CommentViewModel>();
+
+           
         }
     }
 }
