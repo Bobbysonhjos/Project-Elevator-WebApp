@@ -67,8 +67,10 @@
         <thead>
             <tr>
                 <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="id" asp-route-OrderDirection="@Model.SetOrder("id")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Id</a><span class="fa @(Model.SetSortIcon("id"))"></span></th>
-                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="location" asp-route-OrderDirection="@Model.SetOrder("role")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Location</a><span class="fa @(Model.SetSortIcon("role"))"></span></th>
-             
+                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="location" asp-route-OrderDirection="@Model.SetOrder("role")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Role</a><span class="fa @(Model.SetSortIcon("role"))"></span></th>
+                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="location" asp-route-OrderDirection="@Model.SetOrder("createdby")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created By</a><span class="fa @(Model.SetSortIcon("createdby"))"></span></th>
+                <th scope="col" style="width: 30%"><a class="table-sort-link" asp-route-Filter="@Model.Parameters.Filter" asp-route-OrderBy="location" asp-route-OrderDirection="@Model.SetOrder("createddate")" asp-route-SearchQuery="@Model.Parameters.SearchQuery" asp-route-PageSize="@Model.Parameters.PageSize">Created Date</a><span class="fa @(Model.SetSortIcon("createddate"))"></span></th>
+
         </thead>
         <tbody>
             @if (Model.Users.Any())
@@ -78,6 +80,8 @@
                     <tr class="cursor-pointer align-middle" style="height: 50px" onclick="location.href = '@Url.Page("./Details", new { UserId = user.Id })'">
                         <td>@user.Id</td>
                         <td>@user.Role</td>
+                        <td>@user.CreatedBy</td>
+                        <td>@user.CreatedDateUtc</td>
                     </tr>
                 }
             }
