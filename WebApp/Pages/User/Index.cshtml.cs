@@ -21,8 +21,9 @@ public class IndexModel : PageModel
         Users = new List<UserViewModel>();
         Filters = new SelectListItem[]
         {
-                new() { Text = "None", Value = null }, new() { Text = "Active", Value = "active" },
-                new() { Text = "Inactive", Value = "inactive" }
+                new() { Text = "Roles", Value = null }, new() { Text = "Admin", Value = "admin" },
+                new() { Text = "SecondLineTech", Value = "secondlinetech" },
+                new() { Text = "ServiceTech", Value = "servicetech" }
         };
         PaginationMetadata = new PaginationMetadata();
         Parameters = new UserResourceParameters();
@@ -68,14 +69,15 @@ public class IndexModel : PageModel
 
         return "asc";
     }
+    public class UserViewModel
+    {
+        public string Id { get; set; } = null!;
+        public string Role { get; set; } = null!;
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+    }
 }
 
 
-public class UserViewModel
-{
-    public string Id { get; set; } = null!;
-    public string Role { get; set; } = null!;
-    public string CreatedBy { get; set; } = null!;
-    public DateTime CreatedDateUtc { get; set; }
-}
+
 
