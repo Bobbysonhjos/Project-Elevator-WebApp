@@ -20,7 +20,11 @@ namespace WebApp.Helpers.AutoMapper
             CreateMap<ErrandWithCommentsDto, Pages.Errands.DetailsModel.ErrandViewModel>();
             CreateMap<CommentDto,Pages.Errands.DetailsModel.CommentViewModel>();
 
-           
+            // User folder
+            CreateMap<UserDto, Pages.User.IndexModel.UserViewModel>();
+
+
+
         }
     }
 }
