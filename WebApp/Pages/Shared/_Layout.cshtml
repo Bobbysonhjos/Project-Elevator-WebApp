@@ -12,6 +12,7 @@
     <title>@ViewData["Title"] - Project - Elevator</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="https://kit.fontawesome.com/30fc700348.js" crossorigin="anonymous"></script>
 </head>
 <body class="background">
@@ -60,6 +61,12 @@
                                 Errands
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Statistic/Index">
+                                <span data-feather="file" class="align-text-bottom"></span>
+                                Statistic
+                            </a>
+                        </li>
                         @if ((await AuthorizationService.AuthorizeAsync(User, AuthorizationPolicies.AdminAccess)).Succeeded)
                         {
                             <li class="nav-item">
@@ -90,6 +97,8 @@
     <div class="container">
         <main class="col-md-9 ms-sm-auto col-lg-10 bg-transparent">
             @RenderBody()
+            <div id="chartContainer" style="height: 600px; width: 80%;"></div>
+            <div id="chartContainer" style="height: 600px; width: 80%;"></div>
         </main>
     </div>
 

@@ -23,6 +23,9 @@ namespace WebApp.Helpers.AutoMapper
             // User folder
             CreateMap<UserDto, Pages.User.IndexModel.UserViewModel>();
 
+            // Statistic folder
+            //CreateMap<StatisticDto, Pages.Statistic.IndexModel.StatisticViewModel>();
+
 
 
         }
