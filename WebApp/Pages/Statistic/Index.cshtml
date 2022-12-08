@@ -1,0 +1,109 @@
+﻿@page
+@model WebApp.Pages.Statistic.IndexModel
+@{
+    ViewData["Title"] = "Statistic";
+}
+
+<html>
+<head>
+    <title>Installed and Repaired</title>
+    <!-- Include fusioncharts core library -->
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <!-- Include fusion theme -->
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    <script type="text/javascript">
+        //STEP 2 - Chart Data
+        const dataSource = {
+            chart: {
+                caption: "Installed and Repaired",
+                yaxisname: "% of Installed and Repaired Elevators",
+                subcaption: "2018-2022",
+                showhovereffect: "1",
+                drawcrossline: "1",
+                plottooltext: "<b>$dataValue</b> $seriesName",
+                theme: "fusion"
+            },
+            categories: [
+                {
+                    category: [
+                        {
+                            label: "2018"
+                        },
+                        {
+                            label: "2019"
+                        },
+                        {
+                            label: "2020"
+                        },
+                        {
+                            label: "2021"
+                        },
+                        {
+                            label: "2022"
+                        }
+                    ]
+                }
+            ],
+            dataset: [
+                {
+                    seriesname: "Installed",
+                    data: [
+                        {
+                            value: "2"
+                        },
+                        {
+                            value: "3"
+                        },
+                        {
+                            value: "5"
+                        },
+                        {
+                            value: "8"
+                        },
+                        {
+                            value: "11"
+                        }
+                    ]
+                },
+                {
+                    seriesname: "Repaired",
+                    data: [
+                        {
+                            value: "4"
+                        },
+                        {
+                            value: "6"
+                        },
+                        {
+                            value: "10"
+                        },
+                        {
+                            value: "16"
+                        },
+                        {
+                            value: "24"
+                        }
+                    ]
+                },
+            ]
+        };
+
+        FusionCharts.ready(function () {
+            var myChart = new FusionCharts({
+                type: "msline",
+                renderAt: "chart-container",
+                width: "100%",
+                height: "100%",
+                dataFormat: "json",
+                dataSource
+            }).render();
+        });
+
+
+    </script>
+</head>
+<body>
+    <div id="chart-container"></div>
+</body>
+
+</html>
