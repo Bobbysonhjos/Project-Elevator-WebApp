@@ -1,109 +1,64 @@
 ﻿@page
 @model WebApp.Pages.Statistic.IndexModel
 @{
-    ViewData["Title"] = "Statistic";
+    ViewData["Title"] = "stat";
 }
 
-<html>
-<head>
-    <title>Installed and Repaired</title>
-    <!-- Include fusioncharts core library -->
-    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
-    <!-- Include fusion theme -->
-    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
-    <script type="text/javascript">
-        //STEP 2 - Chart Data
-        const dataSource = {
-            chart: {
-                caption: "Installed and Repaired",
-                yaxisname: "% of Installed and Repaired Elevators",
-                subcaption: "2018-2022",
-                showhovereffect: "1",
-                drawcrossline: "1",
-                plottooltext: "<b>$dataValue</b> $seriesName",
-                theme: "fusion"
+<canvas class="my-4 w-100" id="stat" width="900" height="380"></canvas>
+<script>
+
+    const getStat = async () => {
+
+        const result = await fetch('https://project-elevator-api.azurewebsites.net/api/statistic')
+        const data = await result.json()
+
+        feather.replace({ 'aria-hidden': 'true' })
+
+        // Graphs
+        var stat = document.getElementById('@ViewData["Title"]')
+        // eslint-disable-next-line no-unused-vars
+        var stat = new Chart(stat, {
+            type: 'line',
+            data: {
+                labels: [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday'
+                ],
+                datasets: [{
+                    data: data,
+                    lineTension: 0,
+                    backgroundColor: 'transparent',
+                    borderColor: '#007bff',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#007bff'
+                }]
             },
-            categories: [
-                {
-                    category: [
-                        {
-                            label: "2018"
-                        },
-                        {
-                            label: "2019"
-                        },
-                        {
-                            label: "2020"
-                        },
-                        {
-                            label: "2021"
-                        },
-                        {
-                            label: "2022"
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: false
                         }
-                    ]
+                    }]
+                },
+                legend: {
+                    display: false
                 }
-            ],
-            dataset: [
-                {
-                    seriesname: "Installed",
-                    data: [
-                        {
-                            value: "2"
-                        },
-                        {
-                            value: "3"
-                        },
-                        {
-                            value: "5"
-                        },
-                        {
-                            value: "8"
-                        },
-                        {
-                            value: "11"
-                        }
-                    ]
-                },
-                {
-                    seriesname: "Repaired",
-                    data: [
-                        {
-                            value: "4"
-                        },
-                        {
-                            value: "6"
-                        },
-                        {
-                            value: "10"
-                        },
-                        {
-                            value: "16"
-                        },
-                        {
-                            value: "24"
-                        }
-                    ]
-                },
-            ]
-        };
+            }
+        })
+    }
 
-        FusionCharts.ready(function () {
-            var myChart = new FusionCharts({
-                type: "msline",
-                renderAt: "chart-container",
-                width: "100%",
-                height: "100%",
-                dataFormat: "json",
-                dataSource
-            }).render();
-        });
+    getStat()
 
+</script>
 
-    </script>
-</head>
-<body>
-    <div id="chart-container"></div>
-</body>
+@section Scripts
+{
 
-</html>
+}
+
